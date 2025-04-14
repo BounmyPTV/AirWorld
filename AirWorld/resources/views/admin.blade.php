@@ -2,17 +2,16 @@
 @section('title', 'formulaire')
 @section('content')
 
-    <form action="{{route('AddAirport')}}" method="post">
+    <form action="{{route('Add_Airport')}}" method="post">
         Add airport <br>
         1.Name: <br> 
         <input type="text" name="name"> <br>
         2.Country: <br> 
         <input type="text" name="country"> <br>
         @csrf
-    
     </form>
 
-    <form action="{{route('AddAirplane')}}" method="post">
+    <form action="{{route('Add_Airplane')}}" method="post">
         Add airplane <br>
         1.Model: <br>
         <input type="text" name="model"> <br>
@@ -21,7 +20,7 @@
         @csrf
     </form>
 
-    <form action="{{route('AddFlight')}}" method="post">
+    <form action="{{route('Add_Flight')}}" method="post">
         Add flight <br>
         1.Departure date: <br>
         <input type="date" name="depature_date"> <br>
@@ -39,7 +38,7 @@
 
     </form>
 
-    <form action="{{route('AddPassenger')}}" method="post">
+    <form action="{{route('Add_Passenger')}}" method="post">
         Add passenger 
         1.First name: <br>
         <input type="text" name="firstname"> <br>
@@ -51,7 +50,7 @@
         
     </form>
 
-    <form action="{{route('AddAdmin')}}" method="post">
+    <form action="{{route('Add_Admin')}}" method="post">
         Add admin
         1.Name: <br>
         <input type="text" name="name"> <br>
@@ -62,7 +61,7 @@
         @csrf
     </form>
 
-    <form action="{{route('AddUser')}}" method="post">
+    <form action="{{route('Add_User')}}" method="post">
         1.Username: <br>
         <input type="text" name="username"> <br>
         2.Email: <br>
@@ -72,7 +71,7 @@
         @csrf
     </form>
 
-    <form action="{{route('AddReservation')}}" method="post">
+    <form action="{{route('Add_Reservation')}}" method="post">
         Add reservation
         1.Baggages weight: <br>
         <input type="number" name="baggages">kg <br>
@@ -82,8 +81,8 @@
     </form>
 
     {{-- Suprimmer --}}
-
-    <form action="{{route('DeleteAirport')}}" method="post">
+{{-- 
+    <form action="{{route('Delete_Airport')}}" method="post">
         Delete airport <br>
         1.Name: <br> 
         <input type="text" name="name"> <br>
@@ -93,7 +92,7 @@
     
     </form>
 
-    <form action="{{route('DeleteAirplane')}}" method="post">
+    <form action="{{route('Delete_Airplane')}}" method="post">
         Add airplane <br>
         1.Model: <br>
         <input type="text" name="model"> <br>
@@ -102,7 +101,7 @@
         @csrf
     </form>
 
-    <form action="{{route('DeleteFlight')}}" method="post">
+    <form action="{{route('Delete_Flight')}}" method="post">
         Add flight <br>
         1.Departure date: <br>
         <input type="date" name="depature_date"> <br>
@@ -116,11 +115,11 @@
         <input type="number" name="departure_airport_id"> <br>
         6.Arrival:
         <input type="number" name="arrival_airport_id"> <br> --}}
-        @csrf
+        {{-- @csrf
 
     </form>
 
-    <form action="{{route('DeletePassenger')}}" method="post">
+    <form action="{{route('Delete_Passenger')}}" method="post">
         Add passenger 
         1.First name: <br>
         <input type="text" name="firstname"> <br>
@@ -132,7 +131,7 @@
         
     </form>
 
-    <form action="{{route('DeleteAdmin')}}" method="post">
+    <form action="{{route('Delete_Admin')}}" method="post">
         Add admin
         1.Name: <br>
         <input type="text" name="name"> <br>
@@ -143,7 +142,7 @@
         @csrf
     </form>
 
-    <form action="{{route('DeleteUser')}}" method="post">
+    <form action="{{route('Delete_User')}}" method="post">
         1.Username: <br>
         <input type="text" name="username"> <br>
         2.Email: <br>
@@ -153,12 +152,12 @@
         @csrf
     </form>
 
-    <form action="{{route('DeleteReservation')}}" method="post">
+    <form action="{{route('Delete_Reservation')}}" method="post">
         Add reservation
         1.Baggages weight: <br>
         <input type="number" name="baggages">kg <br>
         2.Price:
         <input type="number" name="price">€ <br>
         @csrf
-    </form>
+    </form> --}} 
 @endsection
