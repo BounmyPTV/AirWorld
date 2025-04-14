@@ -30,7 +30,7 @@
                         <td>{{ $airport->name }}</td>
                         <td>{{ $airport->country }}</td>
                         <td>
-                            <a href="{{ route('admin.airports.edit', $airport->id) }}" class="btn btn-primary">Modifier</a>
+                            {{-- <a href="{{ route('admin.airports.edit', $airport->id) }}" class="btn btn-primary">Modifier</a> --}}
                             <form action="{{ route('admin.airports.delete', $airport->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
@@ -43,6 +43,6 @@
         </table>
 
         <!-- Bouton pour créer un nouvel aéroport -->
-        <a href="{{ route('admin.airports.create') }}" class="btn btn-success">Créer un Aéroport</a>
+        {{-- <a href="{{ route('admin.airports.create') }}" class="btn btn-success">Créer un Aéroport</a> --}}
     </div>
 @endsection

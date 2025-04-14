@@ -25,6 +25,21 @@ class AdminController extends Controller {
         $flights = Flight::all();
         return view("admin.flights.index", compact("flights"));
     }
+    // Afficher la liste des passagères
+    public function passengers(){
+        $passengers = Passenger::all();
+        return view("admin.passengers.index" , compact("passengers"));
+    }
+    // Afficher la liste des reservations
+    public function reservations(){
+        $reservation = Reservation::all();
+        return view("admin.reservation.index" , compact("reservations"));
+    }
+    // Afficher la liste des utilisateur
+    public function users(){
+        $users = User::all();
+        return view("admin.user.index" , compact("users"));
+    }
 
     // Ajouter des valeurs dans la table airport
     public function create_airport(array $airportData) {
@@ -187,67 +202,6 @@ class AdminController extends Controller {
             ->with('success', 'Le vol a bien été supprimé.');
     }
 
-    public function createPassenger(Request $request){
-        $passenger = new Passenger();
 
-        $passenger->firstname = $request->get("firstname");
-        $passenger->surname = $request->get("surname");
-        $passenger->seatnumber = $request->get("seatnumber");
 
-        $passenger->reservation()->associate(Reservation::find($request->get("reservation_id")));
-
-        $passenger->save();
-
-        return view("admin" , ["passenger" => $passenger]);
-    }
-
-    public function createAdmin(Request $request){
-        $admin = new Admin();
-
-        $admin->name = $request->get("name");
-        $admin->email = $request->get("email");
-        $admin->password= $request->get("password");
-
-        return view("admin", ["admin" => $admin]);
-    }
-
-    public function createUser(Request $request){
-        $user = new User();
-
-        $user->name = $request->get("username");
-        $user->email = $request->get("email");
-        $user->password = $request->get("password");
-
-        return view("admin" , ["user" => $user]);
-    }
-    public function createReservation(Request $request){
-        $reservation = new Reservation();
-
-        $reservation->baggages = $request->get("baggages");
-        $reservation->price = $request->get("price");
-
-        $reservation->user()->associate(User::find($request->get("user_id")));
-        $reservation->flight()->associate(Flight::find($request->get("flight_id")));
-
-        $reservation->save();
-        return view("admin", ["reservation" => $reservation]);
-    }
-
-    public function DeleteAirport(Request $request){
-        $request->validate([
-            'name' => 'required',
-            'country' => 'required'
-        ]);
-
-        $airport = Flight::where('name',$request->get('name'))->first();
-
-        if($user){
-            $user->delete();
-            return back()->with('successful');
-        } else {
-            return back()->with('error');
-        }
-
-        
-    }
-}
+}    
