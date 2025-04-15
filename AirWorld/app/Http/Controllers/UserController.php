@@ -25,7 +25,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users, email',
-            'password' => 'required|min:4'
+            'password' => 'required|min:4|confirmed'
         ]);
 
         return $request->only('name', 'email', 'password');
@@ -49,7 +49,7 @@ class UserController extends Controller
             'password'=> Hash::make($request->input('password')),
         ]);
 
-        $request->session()->regenerate();
+        Auth::attempt($request->only('email','password'), $request->filled('remember'));
         return redirect()->intended(route('home'));
     }
 
@@ -58,11 +58,11 @@ class UserController extends Controller
 
         $credentials = $request->only('email','password');
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
             return redirect()->intended(route('home'));
         } else {
-            return redirect()->route('auth.login')->withErrors([
+            return redirect()->route('login')->withErrors([
                 'invalid' => 'Invalid email or password'
             ])->withInput();
         }

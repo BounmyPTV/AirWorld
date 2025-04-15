@@ -6,7 +6,7 @@
 @auth
     Hi {{ Auth::User()->name }}
 
-    <form action="{{ route('auth.logout') }}" method="post">
+    <form action="{{ route('logout') }}" method="post">
         @csrf
         @method("delete")
         <input type="submit" value="logout">

@@ -2,17 +2,30 @@
 
 @section('content')
 
-<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card p-4" style="width: 100%; max-width: 500px;">
-        <form action="@yield('form-action')" method="post">
-            @csrf
-            @yield('form-content')
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        @error("invalid")
-        <div class="alert alert-danger mt-3">{{ $message }}</div>
-        @enderror
-    </div>
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">@yield('title')</h2>
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form method="POST" action="@yield('form-action')">
+        @csrf
+        @yield('form-content')
+
+        <div class="form-check mb-2">
+            <input type="checkbox" name="remember" id="remember" class="form-check-input" {{ old('remember') ? 'checked' : '' }}>
+            <label for="remember" class="form-check-label">Remember me</label>
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-100 mt-3">@yield('title')</button>
+    </form>
 </div>
 
 @endsection
