@@ -13,11 +13,19 @@ Route::prefix('admin')->name('admin.')->group(function() {
     
 });
 
-Route::get('/login', [UserController::class,'login'])->name('auth.login');
-Route::post('/login', [UserController::class,'connection'])->name('form.login');
+// Affiche le formulaire de connexion
+Route::get('/login', [UserController::class,'login'])->name('login');
+// Affiche le formulaire d'inscription
+Route::get('/register', [UserController::class,'signup'])->name('register');
+// Affiche la page du compte utilisateur (vérifie que tu sois connecté)
+Route::get('/account', [UserController::class,'account'])->middleware('auth')->name('account');
+// Permet de se déconnecter
+Route::delete('/account', [UserController::class,'logout'])->name('logout');
 
-Route::get('/register', [UserController::class,'signup'])->name('auth.register');
-Route::post('/register', [UserController::class,'register'])->name('form.register');
-
-Route::get('/account', [UserController::class,'account'])->middleware('auth')->name('auth.account');
-Route::delete('/account', [UserController::class,'logout'])->name('auth.logout');
+// La partie formulaire
+Route::prefix('')->name('form.')->group(function() {
+    // lance le controller qui permet de te connecter à un compte (user ou admin)
+    Route::post('/login', [UserController::class,'connection'])->name('login');
+    // lance le controller qui permet de t'enregistrer à un compte (puis te connecter)
+    Route::post('/register', [UserController::class,'register'])->name('register');
+});
