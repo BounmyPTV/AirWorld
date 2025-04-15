@@ -17,17 +17,21 @@ class UserController extends Controller
         return view("auth.login");
     }
 
-    public function login_validation(Request $request) {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'password' => 'required|min:4'
-        ]);
-
-        return $request->only('email', 'email', 'password');
+    public function account() {
+        return view("auth.account");
     }
 
     public function register_validation(Request $request) {
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users, email',
+            'password' => 'required|min:4'
+        ]);
+
+        return $request->only('name', 'email', 'password');
+    }
+
+    public function login_validation(Request $request) {
         $request->validate([
             'email'=> 'required|email',
             'password'=> 'required|min:4'
@@ -58,9 +62,9 @@ class UserController extends Controller
             $request->session()->regenerate();
             return redirect()->intended(route('home'));
         } else {
-            return redirect()->route('login')->withErrors([
+            return redirect()->route('auth.login')->withErrors([
                 'invalid' => 'Invalid email or password'
-            ]);
+            ])->withInput();
         }
     }
 
