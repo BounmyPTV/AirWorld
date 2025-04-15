@@ -41,6 +41,11 @@ class AdminController extends Controller {
         return view("admin.user.index" , compact("users"));
     }
 
+
+    #####
+#############
+    #####
+
     // Ajouter des valeurs dans la table airport
     public function create_airport(array $airportData) {
         return Airport::firstOrCreate([
@@ -81,6 +86,36 @@ class AdminController extends Controller {
             ])->id,
         ]);
     }
+
+    //Ajouter des valeurs dans la table user
+    public function create_user(array $userData){
+        return User::create([
+            'name' => $userData['name'],
+            'email' => $userData['email'],
+            'password' => $userData['password']
+        ]);
+    }
+
+    // Ajouter des valeurs dans la table reservation
+    public function create_reservation(array $reservationData){
+        return Reservation::create([
+            'user_id' => $reservationData('user_id'),
+            'flight_id' => $reservationData('flight_id'),
+            'baggages' => $reservationData('baggages'),
+            'price' => $reservationData('price'),
+        ]);
+    }
+
+    // Ajouter des valeurs dans la table passenger
+    public function create_passenger(array $passengerData){
+        return Passenger::create([
+            'firstname' => $passengerData('firstname'),
+            'surname' => $passengerData('surname'),
+            'seat_number' => $passengerData('seatnumber'),
+            'reservation_id' => $passengerData('reservation_id')
+        ]);
+    }
+
 
     // Ajouter un aéroport via une requête HTTP
     public function add_airport(Request $request) {
@@ -131,6 +166,53 @@ class AdminController extends Controller {
             ->with('success', 'Le vol a bien été créé.');
     }
 
+    // Ajouter un utilisateur via une requête HTTP
+    public function add_user(Request $request){
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $this->create_user($request->all());
+
+        return redirect()->route('admin.users.index')
+            ->with('success' , 'Le compte a bien été créé');
+    }
+
+    // Adjouter une réservation via une reqêute HTTP
+    public function add_reservation(Request $request){
+        $request->validate([
+            'user_id' => ['required',User::exists('users','id')],
+            'flight_id' => ['required',Flight::exists('flights','id')],
+            'baggages' => 'required|integer|min:1',
+            'price' => 'required|integer|min:1'
+        ]);
+
+        $this->create_reservation($request->all());
+
+        return redirect()->route('admin.reservation.index')
+            ->with('success','La réservation a bien été créé');
+    }
+
+    // Ajouter un passagère via une requête HTTP
+    public function add_passager(Request $request){
+        $request->validate([
+            'firstname' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'seat_number' => 'required|integer|min:1',
+            'reservation_id' => 'required|integer|min:1'
+        ]);
+
+        $this->create_passenger($request->all());
+
+        return redirect()->route('admin.passeger.index')
+            ->with('success','Le passagère a bien été créé');
+    }
+        #####
+    ###############
+        #####
+
     // Mise à jour dans la table airport d'une ligne avec son id
     public function update_airport(Request $request, $id) {
         $request->validate([
@@ -173,6 +255,54 @@ class AdminController extends Controller {
 
         return redirect()->route('admin.flights.index')
             ->with('success', 'Le vol a bien été mis à jour.');
+    }
+
+    //Mise à jour dans la tables user d'une ligne avec son id
+    public function update_user(Request $request, $id){
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'password' => 'required'
+            
+        ]);
+
+        $user = User::firstOrFail($id);
+        $user->update($request->all());
+            
+        return redirect()->route('admin.users.index')
+            ->with('success' , 'Le compte a bien mis à jour');
+    }
+
+    // Mise à jour dans la table reservation d'une ligne avec son id
+    public function update_reservation(Request $request, $id){
+        $request->validate([
+            'user_id' => ['required',User::exists('users','id')],
+            'flight_id' => ['required',Flight::exists('flights','id')],
+            'baggages' => 'required|integer|min:1',
+            'price' => 'required|integer|min:1'
+        ]);
+
+        $reservation = Reservation::firstOrFail($id);
+        $reservation->update($request->all());
+
+        return redirect()->route('admin.reservation.index')
+            ->with('success','La réservation a bien été mis à jour');
+    }
+
+    // Mise à jour dans la table de passenger d'une ligne avec son id
+    public function update_passenger(Request $request, $id){
+        $request->validate([
+            'firstname' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'seat_number' => 'required|integer|min:1',
+            'reservation_id' => 'required|integer|min:1'
+        ]);
+
+        $passenger = Passenger::firstOrFail($id);
+        $passenger->update($request->all());
+
+        return redirect()->route('admin.passenger.index')
+            ->with('success','Le passagère a bien été mis à jour');
     }
 
     // Suppression dans la table airport d'une ligne avec son id
