@@ -18,7 +18,11 @@ class UserController extends Controller
     }
 
     public function account() {
-        return view("auth.account");
+        return view("profile.account");
+    }
+
+    public function cart() {
+        return view("profile.cart");
     }
 
     public function register_validation(Request $request) {
