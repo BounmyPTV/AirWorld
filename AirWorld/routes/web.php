@@ -22,6 +22,8 @@ Route::get('/account', [UserController::class,'account'])->middleware('auth')->n
 // Permet de se déconnecter
 Route::delete('/account', [UserController::class,'logout'])->name('logout');
 
+Route::get('/settings', function() {return view('profile.settings'); })->middleware('auth')->name('settings');
+
 // La partie formulaire
 Route::prefix('')->name('form.')->group(function() {
     // lance le controller qui permet de te connecter à un compte (user ou admin)
