@@ -28,6 +28,7 @@ Route::delete('/account', [UserController::class,'logout'])->name('logout');
 
 Route::get('/settings', function() {return view('profile.settings'); })->middleware('auth')->name('settings');
 Route::get('/cart', function() {return view('profile.cart'); })->middleware('auth')->name('cart');
+Route::get('/myreservation', function() {return view('profile.reservation'); })->middleware('auth')->name('myreservation');
 
 Route::get('/discover', function() {return view('discover'); })->name('discover');
 Route::get('/reservation', function() {return view('reservation'); })->name('reservation');
