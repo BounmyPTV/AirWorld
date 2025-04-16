@@ -23,6 +23,7 @@ Route::get('/account', [UserController::class,'account'])->middleware('auth')->n
 Route::delete('/account', [UserController::class,'logout'])->name('logout');
 
 Route::get('/settings', function() {return view('profile.settings'); })->middleware('auth')->name('settings');
+Route::get('/settings', function() {return view('profile.cart'); })->middleware('auth')->name('cart');
 
 // La partie formulaire
 Route::prefix('')->name('form.')->group(function() {
