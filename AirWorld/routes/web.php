@@ -4,9 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 
-Route::get('/', function () {
+Route::get('/home', function () {
     return view('home');
 })->name('home');
+
+Route::get('/', function () {
+    return redirect()->route('home');
+});
 
 Route::prefix('admin')->name('admin.')->group(function() {
     Route::get('/', [AdminController::class, 'airports'])->name('airports.index');
@@ -23,7 +27,10 @@ Route::get('/account', [UserController::class,'account'])->middleware('auth')->n
 Route::delete('/account', [UserController::class,'logout'])->name('logout');
 
 Route::get('/settings', function() {return view('profile.settings'); })->middleware('auth')->name('settings');
-Route::get('/settings', function() {return view('profile.cart'); })->middleware('auth')->name('cart');
+Route::get('/cart', function() {return view('profile.cart'); })->middleware('auth')->name('cart');
+
+Route::get('/discover', function() {return view('discover'); })->name('discover');
+Route::get('/reservation', function() {return view('reservation'); })->name('reservation');
 
 // La partie formulaire
 Route::prefix('')->name('form.')->group(function() {

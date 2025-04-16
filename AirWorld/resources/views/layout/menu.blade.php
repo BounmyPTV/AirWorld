@@ -9,7 +9,7 @@
             'id' => 'accueilContent',
             'left' => '🛫 Infos générales',
             'right' => [
-                ['images/0.png', '<h5>Paris</h5>', '#'],
+                ['images/0.png', '<h5>Paris</h5>', route('reservation')],
                 ['images/1.png', '<h5>Seattle</h5>', '#'],
                 ['images/6.png', '<h5>Bangkok</h5>', '#'],
                 ['images/8.png', '<h5>Vientiane</h5>', '#']
@@ -34,6 +34,24 @@
         ]
     ];
 @endphp
+
+{{-- Style --}}
+<style>
+    .nav-link.nav-toggle {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .nav-link.nav-toggle:hover {
+        background-color: #f8f9fa;
+    }
+
+    .active-link {
+        font-weight: bold;
+        border-bottom: 3px solid #0d6efd;
+        background-color: #e7f1ff;
+        color: #0d6efd !important;
+    }
+</style>
 
 {{-- Header --}}
 <header class="bg-light border-bottom">
@@ -79,13 +97,19 @@
     <div class="container">
         <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-                <a class="nav-link nav-toggle {{ request()->routeIs('home') ? 'active' : '' }}" href="#" data-target="accueilContent">Accueil</a>
+                <a class="nav-link nav-toggle px-3 py-2 {{ request()->routeIs('home') ? 'active-link' : '' }}" href="#" data-target="accueilContent">
+                    Accueil
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-toggle" href="#" data-target="buyContent">Acheter un billet</a>
+                <a class="nav-link nav-toggle px-3 py-2 {{ request()->routeIs('reservation') ? 'active-link' : '' }}" href="#" data-target="buyContent">
+                    Acheter un billet
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-toggle" href="#" data-target="discoverContent">Découvrir</a>
+                <a class="nav-link nav-toggle px-3 py-2 {{ request()->routeIs('discover') ? 'active-link' : '' }}" href="#" data-target="discoverContent">
+                    Découvrir
+                </a>
             </li>
         </ul>
     </div>
@@ -133,19 +157,33 @@
 
 {{-- Script --}}
 <script>
-        document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
         const navLinks = document.querySelectorAll('.nav-toggle');
         const sections = document.querySelectorAll('.content-section');
         let currentVisibleSection = null;
 
+        // Map entre les IDs de sections et les routes Laravel (corrigé : 'accueilContent' vers 'home')
+        const routes = {
+            accueilContent: "{{ route('home') }}",
+            buyContent: "{{ route('reservation') }}",
+            discoverContent: "{{ route('discover') }}"
+        };
+
         navLinks.forEach(link => {
+            let lastClickTime = 0;
+
             link.addEventListener('click', (e) => {
                 e.preventDefault();
+
                 const targetId = link.getAttribute('data-target');
                 const targetSection = document.getElementById(targetId);
 
                 if (!targetSection) return;
 
+                const now = new Date().getTime();
+                const timeSinceLastClick = now - lastClickTime;
+
+                // Affiche toujours la section au 1er clic
                 if (currentVisibleSection === targetSection) {
                     targetSection.classList.add('d-none');
                     currentVisibleSection = null;
@@ -154,10 +192,21 @@
                     targetSection.classList.remove('d-none');
                     currentVisibleSection = targetSection;
                 }
+
+                // Si deuxième clic dans les 400ms → redirection (sauf si on y est déjà)
+                if (timeSinceLastClick < 400) {
+                    const destination = routes[targetId];
+                    const currentUrl = window.location.href.split(/[?#]/)[0]; // Sans query/hash
+                    if (destination && currentUrl !== destination) {
+                        window.location.href = destination;
+                    }
+                }
+
+                lastClickTime = now;
             });
         });
 
-
+        // Clic en dehors pour fermer les sections
         document.addEventListener('click', (e) => {
             const isNavClick = e.target.closest('.nav-toggle');
             const isContentClick = e.target.closest('.content-section');
