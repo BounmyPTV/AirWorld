@@ -27,7 +27,7 @@ class UserController extends Controller
 
     public function register_validation(Request $request) {
         $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|min:2',
             'email' => 'required|email|unique:users, email',
             'password' => 'required|min:4|confirmed'
         ]);

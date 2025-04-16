@@ -18,7 +18,6 @@
                     <label class="form-label fw-bold">Adresse email :</label>
                     <div class="form-control bg-light">{{ Auth::user()->email }}</div>
                 </div>
-                <!-- Ajoute plus de champs ici si tu veux -->
             </div>
 
             <div class="mt-4 d-flex justify-content-between">
