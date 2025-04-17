@@ -21,7 +21,7 @@
 
         <div class="form-check mb-2">
             <input type="checkbox" name="remember" id="remember" class="form-check-input" {{ old('remember') ? 'checked' : '' }}>
-            <label for="remember" class="form-check-label">Remember me</label>
+            <label for="remember" class="form-check-label">Se souvenir de moi</label>
         </div>
         
         <button type="submit" class="btn btn-primary w-100 mt-3">@yield('title')</button>

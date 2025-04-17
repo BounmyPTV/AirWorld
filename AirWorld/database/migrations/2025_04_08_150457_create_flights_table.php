@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('departure_airport_id');
             $table->foreignId('arrival_airport_id');
             $table->foreignId('airplane_id');
+            $table->int('price');
             $table->timestamps();
         });
     }
