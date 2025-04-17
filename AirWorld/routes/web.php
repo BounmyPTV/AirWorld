@@ -23,8 +23,17 @@ Route::get('/login', [UserController::class,'login'])->name('login');
 Route::get('/register', [UserController::class,'signup'])->name('register');
 // Affiche la page du compte utilisateur (vérifie que tu sois connecté)
 Route::get('/account', [UserController::class,'account'])->middleware('auth')->name('account');
-// Permet de se déconnecter
-Route::delete('/account', [UserController::class,'logout'])->name('logout');
+
+Route::prefix('/account')->name('account.')->group(function() {
+    // Permet de se déconnecter
+    Route::get('/update', fn () => redirect()->route('home'));
+    Route::get('/logout', fn () => redirect()->route('home'));
+    Route::get('/delete', fn () => redirect()->route('home'));
+
+    Route::delete('/logout', [UserController::class,'logout'])->middleware('auth')->name('logout');
+    Route::post('/update', [UserController::class, 'updateAccount'])->middleware('auth')->name('update');
+    Route::post('/delete', [UserController::class, 'deleteAccount'])->middleware('auth')->name('delete');
+});
 
 Route::get('/settings', function() {return view('profile.settings'); })->middleware('auth')->name('settings');
 Route::get('/cart', function() {return view('profile.cart'); })->middleware('auth')->name('cart');

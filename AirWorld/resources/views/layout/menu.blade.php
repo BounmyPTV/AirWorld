@@ -174,7 +174,7 @@
                             <li><a href="{{ route('settings') }}" class="dropdown-item">
                                     <i class="fas fa-cog"></i> Paramètres</a></li>
                             <li>
-                                <form action="{{ route('logout') }}" method="POST">
+                                <form action="{{ route('account.logout') }}" method="POST">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-link dropdown-item text-danger">
                                         <i class="fas fa-sign-out-alt text-danger"></i> Déconnexion

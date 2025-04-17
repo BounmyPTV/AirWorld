@@ -7,22 +7,31 @@
     use \App\Http\Helpers\SectionHelper;
 
     $section_signup = new SectionHelper();
-    $section_signup->add_section('Nom', 'name', 'text');
-    $section_signup->add_section('Prénom', 'surname', 'text');
-    $section_signup->add_section('Email', 'email', 'email');
-    $section_signup->add_section('Mot de passe', 'password', 'password');
-    $section_signup->add_section('Confirmation de mot de passe', 'password_confirmation', 'password');
+    $section_signup->add_section('email', 'email', 'email');
+    $section_signup->add_section('mot de passe', 'password', 'password');
+    $section_signup->add_section('mot de passe', 'password_confirmation', 'password');
     $sections = $section_signup->get();
 @endphp
 
 @section('form-content')
+<div class="row">
+    <div class="col-6 mb-3">
+        <label for="name">Entrez votre prénom</label>
+        <input type="text" class="form-control" name="name" id="name" placeholder="Prénom" value="{{ old('name') }}" required>
+    </div>
+    <div class="col-6 mb-3">
+        <label for="surname">Entrez votre nom</label>
+        <input type="text" class="form-control" name="surname" id="surname" placeholder="Nom" value="{{ old('surname') }}" required>
+    </div>
+</div>
     @foreach ($sections as $i => $section)
         <div class="mb-3">
-            <label for="name" class="form-label">{{ $section['id'] }}</label>
+            <label for="name" class="form-label">
+                @if ($i < 2) Entrez votre @else Confirmez votre @endif {{ $section['id'] }}</label>
             <input type="{{ $section['right'] }}" 
                    name="{{ $section['left'] }}"
                    id="{{ $section['left'] }}"
-                   placeholder="Entrez votre {{ strtolower($section['id']) }}"
+                   placeholder="{{ strtolower($section['id']) }}"
                    value="{{ old($section['left']) }}"
                    class="form-control @error($section['left']) is-invalid @enderror"
                    required>
@@ -31,4 +40,11 @@
             @enderror
         </div>
     @endforeach
+@endsection
+
+@section('autre-content')
+<div class="mt-4 text-center">
+    <p class="text-muted mb-1">Tu as déjà un compte ?</p>
+    <a href="{{ route('login') }}" class="btn btn-link">Connecte-toi <i class="fas fa-chevron-right ms-1"></i></a>
+</div>
 @endsection

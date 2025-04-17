@@ -50,6 +50,7 @@ class UserController extends Controller
 
         User::create([
             'name'=> $request->input('name'),
+            'surname' => $request->input('surname'),
             'email'=> $request->input('email'),
             'password'=> Hash::make($request->input('password')),
         ]);
@@ -76,5 +77,10 @@ class UserController extends Controller
     public function logout() {
         Auth::logout();
         return redirect()->route('home');
+    }
+
+    public function deleteAccount() {
+        Auth::user()->delete();
+        logout();
     }
 }
