@@ -74,13 +74,38 @@ class UserController extends Controller
         }
     }
 
-    public function logout() {
+    public function logoutAccount() {
         Auth::logout();
         return redirect()->route('home');
     }
 
+    public function updateAccount(Request $request) {
+        $request->validate([
+            'email' => 'nullable|email|unique:users,email,' . Auth::id(), 
+            'inputNewPassword' => 'nullable|min:4|confirmed'
+        ]);
+    
+        $user = Auth::user();
+    
+        if ($request->filled('email')) {
+            $user->email = $request->input('email');
+        }
+
+        if ($request->filled('inputNewPassword')) {
+            if (!Hash::check($request->input('inputOldPassword'), $user->password)) {
+                return redirect()->route('settings')->withErrors(['error' => 'L\'ancien mot de passe est incorrect.']);
+            }
+
+            $user->password = Hash::make($request->input('inputNewPassword'));
+        }
+    
+        $user->save();
+        Auth::logout();
+        return redirect()->route('settings');
+    }
+
     public function deleteAccount() {
         Auth::user()->delete();
-        logout();
+        return $this->logoutAccount();
     }
 }

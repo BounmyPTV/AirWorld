@@ -206,60 +206,63 @@
             </div>
         </nav>
         {{-- Contenu Navbar (les interactions des boutons de navbar) --}}
-        <div id="contentSections" class="bg-light position-absolute border-bottom shadow-sm rounded-bottom">
-            @foreach ($navbar_menu_section as $index => $section)
-                <div id="{{ $section['id'] }}" class="content-section d-none container-fluid py-3 
-                                        d-grid gap-3 responsive-grid-layout align-items-stretch">
+        <div class=" position-relative">
+            <div id="contentSections" class="bg-light d-grid border-bottom shadow-sm rounded-bottom w-100" 
+            style="position: absolute; top: 0; left: 0; width: 100vw;">
+                @foreach ($navbar_menu_section as $index => $section)
+                    <div id="{{ $section['id'] }}" class="content-section d-none container-fluid py-3 
+                                                d-grid gap-3 responsive-grid-layout align-items-stretch">
 
-                    {{-- Côté gauche --}}
-                    <div class="list-group border rounded-3 p-1 bg-white h-100">
-                        @if (is_array($section['left']))
-                            @foreach ($section['left'] as $i => $item)
-                                <a href="{{ $item['right'] }}"
-                                    class="list-group-item list-group-item-action flex-column align-items-start h-100">
-                                    <div class="d-flex justify-content-between">
-                                        <h5 class="mb-1">{{ $item['id'] }}</h5>
-                                    </div>
-                                    <p class="mb-5">{{ $item['left'] }}</p>
-                                </a>
-                            @endforeach
-                        @else
-                            {!! $section['left']!!}
-                        @endif
-                    </div>
-
-                    {{-- Côté droit --}}
-                    <div class="carousel slide h-100 d-none d-md-block" id="carouselRightContent{{ $index }}"
-                        data-bs-ride="carousel" data-bs-interval="4000">
-                        <div class="carousel-inner rounded-2 h-100">
-                            @foreach($section['right'] as $i => $item)
-                                <div class="carousel-item {{ $i === 0 ? 'active' : '' }} text-center h-100">
-                                    <a href="{{ $item['right'] }}">
-                                        @if ($item['id'])
-                                            <div class="carousel-image-wrapper h-100">
-                                                <img src="{{ asset($item['id']) }}" class="img-fluid w-100 h-100 object-fit-cover"
-                                                    alt="Image">
-                                            </div>
-                                        @endif
-                                        <div class="carousel-caption" style="z-index: 1">
-                                            {!! $item['left'] !!}
+                        {{-- Côté gauche --}}
+                        <div class="list-group border rounded-3 p-1 bg-white h-100">
+                            @if (is_array($section['left']))
+                                @foreach ($section['left'] as $i => $item)
+                                    <a href="{{ $item['right'] }}"
+                                        class="list-group-item list-group-item-action flex-column align-items-start h-100">
+                                        <div class="d-flex justify-content-between">
+                                            <h5 class="mb-1">{{ $item['id'] }}</h5>
                                         </div>
+                                        <small class="mb-5">{{ $item['left'] }}</small>
                                     </a>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            @else
+                                {!! $section['left']!!}
+                            @endif
                         </div>
-                        @if (count($section['right']) > 1)
-                            <div class="carousel-indicators">
-                                @foreach ($section['right'] as $i => $item)
-                                    <button type="button" data-bs-target="#carouselRightContent{{ $index }}" data-bs-slide-to="{{ $i }}"
-                                        class="{{ $i === 0 ? 'active' : '' }}" aria-current="{{ $i === 0 ? 'true' : 'false' }}"
-                                        aria-label="Slide {{ $i + 1 }}"></button>
+
+                        {{-- Côté droit --}}
+                        <div class="carousel slide h-100 d-none d-md-block" id="carouselRightContent{{ $index }}"
+                            data-bs-ride="carousel" data-bs-interval="5000">
+                            <div class="carousel-inner rounded-2 h-100">
+                                @foreach($section['right'] as $i => $item)
+                                    <div class="carousel-item {{ $i === 0 ? 'active' : '' }} text-center h-100">
+                                        <a href="{{ $item['right'] }}">
+                                            @if ($item['id'])
+                                                <div class="carousel-image-wrapper h-100">
+                                                    <img src="{{ asset($item['id']) }}" class="img-fluid w-100 h-100 object-fit-cover"
+                                                        alt="Image">
+                                                </div>
+                                            @endif
+                                            <div class="carousel-caption" style="z-index: 1">
+                                                {!! $item['left'] !!}
+                                            </div>
+                                        </a>
+                                    </div>
                                 @endforeach
                             </div>
-                        @endif
+                            @if (count($section['right']) > 1)
+                                <div class="carousel-indicators">
+                                    @foreach ($section['right'] as $i => $item)
+                                        <button type="button" data-bs-target="#carouselRightContent{{ $index }}"
+                                            data-bs-slide-to="{{ $i }}" class="{{ $i === 0 ? 'active' : '' }}"
+                                            aria-current="{{ $i === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $i + 1 }}"></button>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
     </div>
 

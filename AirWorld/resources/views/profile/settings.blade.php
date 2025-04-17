@@ -67,6 +67,15 @@
                             </form>
                         </div>
                     </div>
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Section Email -->
@@ -76,10 +85,11 @@
                             <h5 class="card-title mb-0">Changer votre email</h5>
                         </div>
                         <div class="card-body">
-                            <form>
+                            <form method="POST" action="{{ route('account.update') }}">
+                                @csrf
                                 <div class="form-group">
                                     <label for="inputEmail">Nouvelle adresse email</label>
-                                    <input type="email" class="form-control" id="inputEmail" placeholder="Entrez votre nouveau email">
+                                    <input type="email" class="form-control" id="inputEmail" placeholder="Entrez votre nouveau email" name="email">
                                 </div>
                                 <button type="submit" class="btn btn-primary mt-3">Mettre à jour l'email</button>
                             </form>
@@ -94,18 +104,19 @@
                             <h5 class="card-title mb-0">Changer votre mot de passe</h5>
                         </div>
                         <div class="card-body">
-                            <form>
+                            <form method="POST" action="{{ route('account.update') }}">
+                                @csrf
                                 <div class="form-group">
                                     <label for="inputOldPassword">Ancien mot de passe</label>
-                                    <input type="password" class="form-control" id="inputOldPassword" placeholder="Entrez votre ancien mot de passe">
+                                    <input type="password" class="form-control" name="inputOldPassword" id="inputOldPassword" placeholder="Entrez votre ancien mot de passe">
                                 </div>
                                 <div class="form-group">
                                     <label for="inputNewPassword">Nouveau mot de passe</label>
-                                    <input type="password" class="form-control" id="inputNewPassword" placeholder="Entrez votre nouveau mot de passe">
+                                    <input type="password" class="form-control" name="inputNewPassword" id="inputNewPassword" placeholder="Entrez votre nouveau mot de passe">
                                 </div>
                                 <div class="form-group">
                                     <label for="inputConfirmPassword">Confirmer le mot de passe</label>
-                                    <input type="password" class="form-control" id="inputConfirmPassword" placeholder="Confirmez le mot de passe">
+                                    <input type="password" class="form-control" name="inputNewPassword_confirmation" id="inputConfirmPassword" placeholder="Confirmez le mot de passe">
                                 </div>
                                 <button type="submit" class="btn btn-primary mt-3">Mettre à jour le mot de passe</button>
                             </form>
@@ -121,11 +132,14 @@
                         </div>
                         <div class="card-body">
                             <p class="text-danger">Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.</p>
-                            <button type="button" class="btn btn-danger">Supprimer le compte</button>
+                            <form method="POST" action="{{ route('account.delete') }}"> 
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Supprimer le compte</button>
+                            </form>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
