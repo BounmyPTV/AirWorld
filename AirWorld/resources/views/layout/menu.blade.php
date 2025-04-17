@@ -6,6 +6,7 @@
     use App\Http\Helpers\CardHelper;
     use App\Http\Helpers\ImgHelper;
 
+    $home = route('home');
     $res = route('reservation');
     $dis = route('discover');
 
@@ -14,16 +15,34 @@
     }
 
     $navbar_menu = new SectionHelper();
-    $navbar_menu->add_section('accContent', '', [
+    $navbar_menu->add_section('accContent', 
+    [
+        CardHelper::card('À la une', 'Découvrez nos destinations du moment.', "$home#home1"),
+        CardHelper::card('Petits prix', 'Voyagez aux quatre coins du monde sans vous ruiner. Profitez de nos offres exceptionnelles!', "$home#home2"),
+        CardHelper::card('Vite vite!', 'Les meilleures offres disparaissent rapidement. Saisissez qu\'il ne soit trop tard!', "$home#home3")
+    ], 
+    [
         card_navbar(0, 'Paris', $res),
         card_navbar(1, 'Seattle', $res),
         card_navbar(6, 'Bangkok', $res),
         card_navbar(8, 'Vientiane', $res),
     ]);
-    $navbar_menu->add_section('resContent', '', [
-        card_navbar(7, '', '#'),
+    $navbar_menu->add_section('resContent', 
+    [
+        CardHelper::card('Réservez dès maintenant', 'Réservez votre voyage en toute simplicité. Prêt pour l\'aventure?', "$res#book1"),
+        CardHelper::card('Offres exclusives', 'Des offres de réservation incroyables. Ne manquez pas nos promotions!', "$res#book2"),
+        CardHelper::card('À la dernière minute', 'Réservez votre voyage à la dernière minute. C\'est encore possible!', "$res#book3")
+    ],
+    [
+        card_navbar(7, 'N\'attendez plus!', '#'),
     ]);
-    $navbar_menu->add_section('disContent', '', [
+    $navbar_menu->add_section('disContent', 
+    [
+        CardHelper::card('Destinations à découvrir', 'Partez à la découverte des endroits les plus incroyables!', "$dis#discover1"),
+        CardHelper::card('Voyages immersifs', 'Vivez une expérience immersive. Explorez des lieux cachés et magnifiques!', "$dis#discover2"),
+        CardHelper::card('Aventure sans fin', 'Découvrez des destinations exotiques. Pour les passionnés de découvertes!', "$dis#discover3")
+    ], 
+    [
         card_navbar(2, 'Îles paradisiaques', $dis),
         card_navbar(3, 'Voyages en montagne', $dis),
         card_navbar(4, 'Villes à visiter', $dis),
@@ -43,7 +62,13 @@
 @section('content')
 {{-- partie style (css) --}}
 <style>
-        .nav-link.nav-toggle {
+    .header-logo {
+        height: 30px; 
+        width: auto;
+        object-fit: contain;
+    }
+
+    .nav-link.nav-toggle {
         transition: all 0.2s ease-in-out;
     }
 
@@ -54,7 +79,7 @@
     .active-link {
         font-weight: bold;
         background-color: #e7f1ff;
-        color: #0d6efd !important;
+        color: #0d6efd!important;
     }
 
     .visible-link-border {
@@ -63,29 +88,44 @@
 
     .responsive-grid-layout {
         display: grid;
-        grid-template-columns: 1fr 2fr;
+        grid-template-columns: 0.8fr 2.2fr;
         gap: 1rem;
-        max-width: 1500;
+        max-width: 1500px;
+        align-items: stretch;
+        height: 100%;
     }
 
     .carousel-inner {
-    position: relative;
-}
+        position: relative;
+        height: 100%;
+    }
 
     .carousel-inner::after {
-        content: '';
         position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 15%;
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%); 
+        height: 20%;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0.9) 100%);
+        content: '';
+    }
+
+    .carousel-image-wrapper {
+        max-height: 500px;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .carousel-image-wrapper img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
     }
 
     @media (max-width: 768px) {
         .responsive-grid-layout {
-            display: flex !important;
-            flex-direction: column;
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -93,7 +133,7 @@
 {{-- Header --}}
 <header class="bg-light border-bottom">
     <div class="container d-flex justify-content-between align-items-center py-2">
-        <div class="fw-bold fs-5">AirWorld</div>
+        <img src="{{ ImgHelper::img_section('icon') }}"  alt="AirWorld" class="header-logo">
         {{-- 
         La partie authentification.
         Si la personne est connecté à son compte:
@@ -146,7 +186,7 @@
         <ul class="navbar-nav mx-auto">
             @foreach ($navbar_button_section as $index => $section)
             <li class="nav-item">
-            <a class="nav-link nav-toggle px-3 py-2 {{ $section['right'] ? 'active-link' : '' }}" href="#" data-target="{{ $section['left'] }}">
+            <a class="nav-link nav-toggle px-3 py-2 {{ $section['right']? 'active-link' : '' }}" href="#" data-target="{{ $section['left'] }}">
                 {{ $section['id'] }}
             </a>
             @endforeach
@@ -154,33 +194,52 @@
     </div>
 </nav>
 {{-- Contenu Navbar (les interactions des boutons de navbar) --}}
-<div id="contentSections">
+<div id="contentSections" class="bg-light">
     @foreach ($navbar_menu_section as $index => $section)
     <div id="{{ $section['id'] }}" 
         class="content-section d-none container-fluid py-3 
-        d-grid gap-3 responsive-grid-layout">
-        <div class="border rounded-3 p-3 bg-light">{!! $section['left'] !!}</div>
-        <div class="carousel slide" id="carouselRightContent{{ $index }}" data-bs-ride="carousel" data-bs-interval="4000">
-            <div class="carousel-inner rounded-2">
-                @foreach($section['right'] as $i => $item)
-                    <div class="carousel-item {{ $i === 0 ? 'active' : '' }} text-center">
-                        <a href="{{ $item['right'] }}">
-                        @if (is_array($item))
-                            @if ($item['id']) <img src="{{ asset($item['id']) }}" class="img-fluid"> @endif
-                            <div class="carousel-caption d-none d-md-block" style="z-index: 1"> {!! $item['left'] !!}</div>
-                        @else
-                            <div>{{ $item }}</div>
-                        @endif
-                        </a>
+        d-grid gap-3 responsive-grid-layout align-items-stretch">
+        
+        {{-- Côté gauche --}}
+        <div class="list-group border rounded-3 p-1 bg-white h-100">
+            @if (is_array($section['left']))
+            @foreach ($section['left'] as $i => $item)
+                <a href="{{ $item['right'] }}" class="list-group-item list-group-item-action flex-column align-items-start h-100">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="mb-1">{{ $item['id'] }}</h5>
                     </div>
+                    <p class="mb-5">{{ $item['left'] }}</p>
+                </a>
+            @endforeach
+            @else
+            {!! $section['left']!!}
+            @endif
+        </div>
+
+        {{-- Côté droit --}}
+        <div class="carousel slide h-100 d-none d-md-block" id="carouselRightContent{{ $index }}" data-bs-ride="carousel" data-bs-interval="4000">
+            <div class="carousel-inner rounded-2 h-100">
+                @foreach($section['right'] as $i => $item)
+                <div class="carousel-item {{ $i === 0 ? 'active' : '' }} text-center h-100">
+                    <a href="{{ $item['right'] }}">
+                        @if ($item['id'])
+                        <div class="carousel-image-wrapper h-100">
+                            <img src="{{ asset($item['id']) }}" class="img-fluid w-100 h-100 object-fit-cover" alt="Image">
+                        </div>
+                        @endif
+                        <div class="carousel-caption" style="z-index: 1">
+                            {!! $item['left'] !!}
+                        </div>
+                    </a>
+                </div>
                 @endforeach
             </div>
             @if (count($section['right']) > 1)
             <div class="carousel-indicators">
                 @foreach ($section['right'] as $i => $item)
                     <button type="button" data-bs-target="#carouselRightContent{{ $index }}" data-bs-slide-to="{{ $i }}"
-                            class="{{ $i === 0 ? 'active' : '' }}"
-                            aria-current="{{ $i === 0 ? 'true' : 'false' }}"
+                            class="{{ $i === 0? 'active' : '' }}"
+                            aria-current="{{ $i === 0? 'true' : 'false' }}"
                             aria-label="Slide {{ $i + 1 }}"></button>
                 @endforeach
             </div>
@@ -244,7 +303,7 @@
                 if (timeSinceLastClick < 400) {
                     const destination = routes[targetId];
                     const currentUrl = window.location.href.split(/[?#]/)[0];
-                    if (destination && currentUrl !== destination) {
+                    if (destination && currentUrl!== destination) {
                         window.location.href = destination;
                     }
                 }
@@ -258,7 +317,7 @@
             const isNavClick = e.target.closest('.nav-toggle');
             const isContentClick = e.target.closest('.content-section');
     
-            if (!isNavClick && !isContentClick) {
+            if (!isNavClick &&!isContentClick) {
                 sections.forEach(section => section.classList.add('d-none'));
                 navLinks.forEach(link => link.classList.remove('visible-link-border'));
                 currentVisibleSection = null;
