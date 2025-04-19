@@ -28,11 +28,12 @@ class UserController extends Controller
     public function register_validation(Request $request) {
         $request->validate([
             'name' => 'required|string|min:2',
+            'surname' => 'required|string|min:2',
             'email' => 'required|email|unique:users, email',
             'password' => 'required|min:4|confirmed'
         ]);
 
-        return $request->only('name', 'email', 'password');
+        return $request->only('name', 'surname', 'email', 'password');
     }
 
     public function login_validation(Request $request) {
@@ -49,6 +50,7 @@ class UserController extends Controller
 
         User::create([
             'name'=> $request->input('name'),
+            'surname' => $request->input('surname'),
             'email'=> $request->input('email'),
             'password'=> Hash::make($request->input('password')),
         ]);
@@ -72,8 +74,38 @@ class UserController extends Controller
         }
     }
 
-    public function logout() {
+    public function logoutAccount() {
         Auth::logout();
         return redirect()->route('home');
+    }
+
+    public function updateAccount(Request $request) {
+        $request->validate([
+            'email' => 'nullable|email|unique:users,email,' . Auth::id(), 
+            'inputNewPassword' => 'nullable|min:4|confirmed'
+        ]);
+    
+        $user = Auth::user();
+    
+        if ($request->filled('email')) {
+            $user->email = $request->input('email');
+        }
+
+        if ($request->filled('inputNewPassword')) {
+            if (!Hash::check($request->input('inputOldPassword'), $user->password)) {
+                return redirect()->route('settings')->withErrors(['error' => 'L\'ancien mot de passe est incorrect.']);
+            }
+
+            $user->password = Hash::make($request->input('inputNewPassword'));
+        }
+    
+        $user->save();
+        Auth::logout();
+        return redirect()->route('settings');
+    }
+
+    public function deleteAccount() {
+        Auth::user()->delete();
+        return $this->logoutAccount();
     }
 }
