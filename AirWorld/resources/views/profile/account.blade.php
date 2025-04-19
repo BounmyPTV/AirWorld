@@ -25,7 +25,7 @@
                     ✏️ Modifier le profil
                 </a>
 
-                <form action="{{ route('logout') }}" method="POST">
+                <form action="{{ route('account.logout') }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger rounded-3">
