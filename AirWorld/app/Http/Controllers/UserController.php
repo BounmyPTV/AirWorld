@@ -93,7 +93,7 @@ class UserController extends Controller
 
         if ($request->filled('inputNewPassword')) {
             if (!Hash::check($request->input('inputOldPassword'), $user->password)) {
-                return redirect()->route('settings')->withErrors(['error' => 'L\'ancien mot de passe est incorrect.']);
+                return redirect()->route('account.settings')->withErrors(['error' => 'L\'ancien mot de passe est incorrect.']);
             }
 
             $user->password = Hash::make($request->input('inputNewPassword'));
@@ -101,7 +101,7 @@ class UserController extends Controller
     
         $user->save();
         Auth::logout();
-        return redirect()->route('settings');
+        return redirect()->route('account.settings');
     }
 
     public function deleteAccount() {

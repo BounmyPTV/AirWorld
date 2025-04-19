@@ -164,14 +164,14 @@
                         @auth
                             <li><a href="{{ route('account') }}" class="dropdown-item">
                                     <i class="fas fa-user"></i> Mon Profil</a></li>
-                            <li><a href="{{ route('cart') }}" class="dropdown-item">
+                            <li><a href="{{ route('account.cart') }}" class="dropdown-item">
                                     <i class="fas fa-shopping-cart"></i> Mon Panier</a></li>
-                            <li><a href="{{ route('myreservation') }}" class="dropdown-item">
+                            <li><a href="{{ route('account.myreservation') }}" class="dropdown-item">
                                     <i class="fas fa-ticket-alt"></i> Mes réservations</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a href="{{ route('settings') }}" class="dropdown-item">
+                            <li><a href="{{ route('account.settings') }}" class="dropdown-item">
                                     <i class="fas fa-cog"></i> Paramètres</a></li>
                             <li>
                                 <form action="{{ route('account.logout') }}" method="POST">
@@ -239,7 +239,7 @@
                                         <a href="{{ $item['right'] }}">
                                             @if ($item['id'])
                                                 <div class="carousel-image-wrapper h-100">
-                                                    <img src="{{ asset($item['id']) }}" class="img-fluid w-100 h-100 object-fit-cover"
+                                                    <img src="{{ asset($item['id']) }}" loading="lazy" class="img-fluid w-100 h-100 object-fit-cover"
                                                         alt="Image">
                                                 </div>
                                             @endif

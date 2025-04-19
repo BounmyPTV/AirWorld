@@ -15,14 +15,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-
-        $this->call(AdminSeeder::class);
-
-        User::factory()->create([
-            'name' => 'Test',
-            'surname' => 'User',
-            'email' => 'test@example.com',
-            'password' => Hash::make('1234'),
+        $this->call([
+            UserSeeder::class,
+            AirplaneSeeder::class,
+            AirportSeeder::class,
+            FlightSeeder::class,
+            ReservationSeeder::class,
+            PassengerSeeder::class,
+            AdminSeeder::class,
         ]);
     }
 }

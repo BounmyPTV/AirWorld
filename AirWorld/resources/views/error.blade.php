@@ -1,7 +1,5 @@
 @extends('layout.template')
 
-@section('title', 'Erreur {{ $code }}')
-
 @section('content')
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
     <div class="text-center">

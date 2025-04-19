@@ -21,7 +21,7 @@
             </div>
 
             <div class="mt-4 d-flex justify-content-between">
-                <a href="{{ route('settings') }}" class="btn btn-outline-primary rounded-3">
+                <a href="{{ route('account.settings') }}" class="btn btn-outline-primary rounded-3">
                     ✏️ Modifier le profil
                 </a>
 
