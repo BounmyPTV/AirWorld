@@ -68,13 +68,18 @@
                                     </div>
                                 </div>
                                 {{-- Infos extra + Actions --}}
-                                <div class="d-flex justify-content-between mt-3">
+                                <div class="d-flex justify-content-between align-items-center mt-3">
                                     <div class="text-muted">
                                         Bagages : <strong>{{ $r->baggages }}</strong>
                                     </div>
-                                    <div>
+                                    <div class="d-flex align-items-center">
                                         <a href="#" class="btn btn-sm btn-outline-secondary me-2">Modifier</a>
-                                        <a href="#" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                                        <form action="{{ route('delete.cart') }}" method="POST" class="m-0 p-0">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="reservation_id" value="{{ $r->id }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -83,25 +88,24 @@
                     </div>
                     <hr>
                     <div class="mt-4">
-                        <a href="#" class="text-body"><i class="fas fa-chevron-left ms-1"></i>Retournez à l'accueil</a>
+                        <a href="{{ route('home') }}" class="text-body"><i class="fas fa-chevron-left ms-1"></i>Retournez à l'accueil</a>
                     </div>
                 </div>
             </div>
 
             <!-- Partie droite nav + summary -->
-            <div class="col-md-4 bg-light p-4 d-flex flex-column justify-content-between">
-                <div>
-                    <div class="d-flex justify-content-between">
-                        <strong>Prix total</strong>
-                        <span>{{ number_format(
-                                    $res->sum(function($reservation) {
-                                        return $reservation->flight->price;
-                                    })
-                                )}} &euro;</span>
-                    </div>
-                    <hr>
+            <div class="col-md-4 bg-body p-4 d-flex flex-column justify-content-between">
+
+                <div class="d-flex justify-content-between">
+                    <strong>Prix total</strong>
+                    <span>{{ number_format(
+                                $res->sum(function($reservation) {
+                                    return $reservation->flight->price;
+                                })
+                            )}} &euro;</span>
                 </div>
-                <button class="btn btn-dark w-100 mt-4">Passer au paiement</button>
+                <hr>
+                <button class="btn w-100 mt-4" style="background-color: var(--bs-body-color); color: var(--bs-body-bg);">Passer au paiement</button>
             </div>
         </div>
     </div>

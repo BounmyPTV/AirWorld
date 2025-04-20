@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,14 +18,15 @@ Route::name('form.')->group(function () {
 
 // Account routes (auth required)
 Route::prefix('/account')->name('account')->middleware('auth')->group(function () {
-    Route::get('/', [UserController::class, 'account']);
+    Route::get('/', [UserController::class, 'settings']);
+
     Route::delete('/logout', [UserController::class, 'logoutAccount'])->name('.logout');
     Route::post('/update', [UserController::class, 'updateAccount'])->name('.update');
     Route::delete('/delete', [UserController::class, 'deleteAccount'])->name('.delete');
+    Route::post('/cart/delete', [UserController::class, 'delete_cart'])->name('.delete_cart');
 
-    Route::get('/settings', [SystemController::class, 'settings'])->name('.settings');
-    Route::get('/cart', [SystemController::class, 'cart'])->name('.cart');
-    Route::get('/reservation', [SystemController::class, 'myreservation'])->name('.myreservation');
+    Route::get('/cart', [CartController::class, 'cart'])->name('.cart');
+    Route::get('/reservation', [UserController::class, 'myreservation'])->name('.myreservation');
 });
 
 // Public page
@@ -32,3 +34,5 @@ Route::get('/', fn () => redirect()->route('home'));
 Route::get('/home', [SystemController::class, 'home'])->name('home');
 Route::get('/reservation', [SystemController::class, 'reservation'])->name('reservation');
 Route::get('/discover', [SystemController::class, 'discover'])->name('discover');
+
+Route::delete('/cart/delete', [CartController::class, 'delete_cart'])->name('delete.cart');

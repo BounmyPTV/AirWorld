@@ -80,7 +80,7 @@
         }
 
         .nav-link.nav-toggle:hover {
-            background-color: #f8f9fa;
+            background-color: var(--bs-body-bg);
         }
 
         .active-link {
@@ -114,7 +114,6 @@
             width: 100%;
             height: 20%;
             background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0.9) 100%);
-            content: '';
         }
 
         .carousel-image-wrapper {
@@ -139,7 +138,7 @@
 
     {{-- Header --}}
     <div class="sticky-top" style="top: 0; z-index: 1020;">
-        <header class="bg-light border-bottom">
+        <header class="bg-body border-bottom">
             <div class="container d-flex justify-content-between align-items-center py-2">
                 <img src="{{ ImgHelper::img_section('icon') }}" alt="AirWorld" class="header-logo">
                 {{--
@@ -162,8 +161,6 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownProfile">
                         @auth
-                            <li><a href="{{ route('account') }}" class="dropdown-item">
-                                    <i class="fas fa-user"></i> Mon Profil</a></li>
                             <li><a href="{{ route('account.cart') }}" class="dropdown-item">
                                     <i class="fas fa-shopping-cart"></i> Mon Panier</a></li>
                             <li><a href="{{ route('account.myreservation') }}" class="dropdown-item">
@@ -171,7 +168,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a href="{{ route('account.settings') }}" class="dropdown-item">
+                            <li><a href="{{ route('account') }}" class="dropdown-item">
                                     <i class="fas fa-cog"></i> Paramètres</a></li>
                             <li>
                                 <form action="{{ route('account.logout') }}" method="POST">
@@ -192,29 +189,31 @@
             </div>
         </header>
         {{-- Navbar (lié au Header) --}}
-        <nav class="navbar navbar-expand navbar-light bg-white shadow-sm border-bottom">
+        <nav class="navbar navbar-expand bg-body-tertiary shadow-sm border-bottom">
             <div class="container">
                 <ul class="navbar-nav mx-auto">
                     @foreach ($navbar_button_section as $index => $section)
                         <li class="nav-item">
-                            <a class="nav-link nav-toggle px-3 py-2 {{ $section['right'] ? 'active-link' : '' }}" href="#"
-                                data-target="{{ $section['left'] }}">
+                            <a class="nav-link nav-toggle px-3 py-2 
+                                                {{ $section['right'] ? 'active text-primary fw-semibold' : 'text-body' }}"
+                                href="#" data-target="{{ $section['left'] }}">
                                 {{ $section['id'] }}
                             </a>
+                        </li>
                     @endforeach
                 </ul>
             </div>
         </nav>
         {{-- Contenu Navbar (les interactions des boutons de navbar) --}}
         <div class=" position-relative">
-            <div id="contentSections" class="bg-light d-grid border-bottom shadow-sm rounded-bottom w-100" 
-            style="position: absolute; top: 0; left: 0; width: 100vw;">
+            <div id="contentSections" class="bg-body d-grid border-bottom shadow-sm rounded-bottom w-100"
+                style="position: absolute; top: 0; left: 0; width: 100vw;">
                 @foreach ($navbar_menu_section as $index => $section)
                     <div id="{{ $section['id'] }}" class="content-section d-none container-fluid py-3 
-                                                d-grid gap-3 responsive-grid-layout align-items-stretch">
+                                                                d-grid gap-3 responsive-grid-layout align-items-stretch">
 
                         {{-- Côté gauche --}}
-                        <div class="list-group border rounded-3 p-1 bg-white h-100">
+                        <div class="list-group border rounded-3 p-1 bg-body-secondary h-100">
                             @if (is_array($section['left']))
                                 @foreach ($section['left'] as $i => $item)
                                     <a href="{{ $item['right'] }}"
@@ -239,11 +238,11 @@
                                         <a href="{{ $item['right'] }}">
                                             @if ($item['id'])
                                                 <div class="carousel-image-wrapper h-100">
-                                                    <img src="{{ asset($item['id']) }}" loading="lazy" class="img-fluid w-100 h-100 object-fit-cover"
-                                                        alt="Image">
+                                                    <img src="{{ asset($item['id']) }}" loading="lazy"
+                                                        class="img-fluid w-100 h-100 object-fit-cover" alt="Image">
                                                 </div>
                                             @endif
-                                            <div class="carousel-caption" style="z-index: 1">
+                                            <div class="carousel-caption text-light" style="z-index: 1">
                                                 {!! $item['left'] !!}
                                             </div>
                                         </a>
@@ -253,7 +252,7 @@
                             @if (count($section['right']) > 1)
                                 <div class="carousel-indicators">
                                     @foreach ($section['right'] as $i => $item)
-                                        <button type="button" data-bs-target="#carouselRightContent{{ $index }}"
+                                        <button class="bg-light" type="button" data-bs-target="#carouselRightContent{{ $index }}"
                                             data-bs-slide-to="{{ $i }}" class="{{ $i === 0 ? 'active' : '' }}"
                                             aria-current="{{ $i === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $i + 1 }}"></button>
                                     @endforeach
@@ -272,8 +271,8 @@
     </div>
 
     {{-- Footer --}}
-    <footer class="bg-light text-center py-4 mt-auto border-top">
-        <footer class="bg-light text-center py-4 mt-auto border-top">
+    <footer class="bg-body text-center py-4 mt-auto border-top">
+        <footer class="bg-body text-center py-4 mt-auto border-top">
             <div class="container">
                 <div class="container">
                     <footer class="py-5">

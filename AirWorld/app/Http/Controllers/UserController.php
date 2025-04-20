@@ -17,8 +17,12 @@ class UserController extends Controller
         return view("auth.login");
     }
 
-    public function account() {
-        return view("profile.account");
+    public function myreservation() { 
+        return view('profile.reservation'); 
+    }
+
+    public function settings() { 
+        return view('profile.settings'); 
     }
 
     public function cart() {
