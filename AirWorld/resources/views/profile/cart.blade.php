@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="container-fluid h-100 p-4">
-    <div class="card h-100 shadow">
+    <div class="rounded-1 card h-100 shadow">
         <div class="row h-100 g-0">
             <!-- Partie gauche scrollspy -->
             <div class="col-md-8">
@@ -18,7 +18,7 @@
                         <span class="text-muted">{{ count($res) }} révervations</span>
                     </div>
 
-                    <div style="height:70vh; overflow-y: auto">
+                    <div style="height:69vh; overflow-y: auto">
                         @foreach($res as $index => $r)
                         <div class="card mb-4 shadow-sm" id="reservation {{$item}}">
                             <div class="card-body">
@@ -51,7 +51,7 @@
                                     <div class="row row-cols-1 row-cols-md-2 g-2">
                                         @foreach($r->passengers as $p)
                                             <div class="col">
-                                                <div class="border rounded p-3 d-flex align-items-center bg-light">
+                                                <div class="border rounded p-3 d-flex align-items-center bg-body">
                                                     <div class="me-3">
                                                         <i class="bi bi-person-circle fs-3 text-secondary"></i>
                                                     </div>
@@ -73,7 +73,6 @@
                                         Bagages : <strong>{{ $r->baggages }}</strong>
                                     </div>
                                     <div class="d-flex align-items-center">
-                                        <a href="#" class="btn btn-sm btn-outline-secondary me-2">Modifier</a>
                                         <form action="{{ route('delete.cart') }}" method="POST" class="m-0 p-0">
                                             @csrf
                                             @method('DELETE')
@@ -102,9 +101,8 @@
                                 $res->sum(function($reservation) {
                                     return $reservation->flight->price;
                                 })
-                            )}} &euro;</span>
+                                )}} &euro;</span>
                 </div>
-                <hr>
                 <button class="btn w-100 mt-4" style="background-color: var(--bs-body-color); color: var(--bs-body-bg);">Passer au paiement</button>
             </div>
         </div>

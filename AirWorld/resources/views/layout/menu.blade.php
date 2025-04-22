@@ -213,7 +213,7 @@
                                                                 d-grid gap-3 responsive-grid-layout align-items-stretch">
 
                         {{-- Côté gauche --}}
-                        <div class="list-group border rounded-3 p-1 bg-body-secondary h-100">
+                        <div class="list-group border rounded-3 p-1 bg-body-secondary h-100 shadow-sm">
                             @if (is_array($section['left']))
                                 @foreach ($section['left'] as $i => $item)
                                     <a href="{{ $item['right'] }}"
@@ -230,7 +230,7 @@
                         </div>
 
                         {{-- Côté droit --}}
-                        <div class="carousel slide h-100 d-none d-md-block" id="carouselRightContent{{ $index }}"
+                        <div class="carousel bg-body-secondary slide h-100 d-none d-md-block shadow-sm rounded-2" id="carouselRightContent{{ $index }}"
                             data-bs-ride="carousel" data-bs-interval="5000">
                             <div class="carousel-inner rounded-2 h-100">
                                 @foreach($section['right'] as $i => $item)
