@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Airplane extends Model
 {
+    protected $fillable = ['model','seats'];
     public function flights() {
         return $this->hasMany(Flight::class);
     }
