@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('flight_id');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('flight_id')->constrained()->onDelete('cascade');
             $table->decimal('baggages');
-            $table->decimal('price');
+            $table->boolean('price')->default(false);
             $table->timestamps();
         });
     }

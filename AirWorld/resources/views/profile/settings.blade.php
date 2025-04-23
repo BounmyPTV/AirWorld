@@ -4,8 +4,8 @@
 <div class="container p-2">
     <h1 class="h3 mb-3">Paramètres</h1>
     <div class="row">
-        <div class="col-md-5 col-xl-4">
 
+        <div class="col-md-5 col-xl-4">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Réglages du profil</h5>

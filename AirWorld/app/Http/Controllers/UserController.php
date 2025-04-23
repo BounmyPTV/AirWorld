@@ -17,15 +17,19 @@ class UserController extends Controller
         return view("auth.login");
     }
 
-    public function account() {
-        return view("profile.account");
+    public function myreservation() { 
+        return view('profile.reservation'); 
+    }
+
+    public function settings() { 
+        return view('profile.settings'); 
     }
 
     public function cart() {
         return view("profile.cart");
     }
 
-    public function register_validation(Request $request) {
+    public static function register_validation(Request $request) {
         $request->validate([
             'name' => 'required|string|min:2',
             'surname' => 'required|string|min:2',
@@ -36,7 +40,7 @@ class UserController extends Controller
         return $request->only('name', 'surname', 'email', 'password');
     }
 
-    public function login_validation(Request $request) {
+    public static function login_validation(Request $request) {
         $request->validate([
             'email'=> 'required|email',
             'password'=> 'required|min:4'
@@ -69,7 +73,7 @@ class UserController extends Controller
             return redirect()->intended(route('home'));
         } else {
             return redirect()->route('login')->withErrors([
-                'invalid' => 'Invalid email or password'
+                'invalid' => 'email ou mot de passe invalide'
             ])->withInput();
         }
     }
@@ -93,7 +97,8 @@ class UserController extends Controller
 
         if ($request->filled('inputNewPassword')) {
             if (!Hash::check($request->input('inputOldPassword'), $user->password)) {
-                return redirect()->route('settings')->withErrors(['error' => 'L\'ancien mot de passe est incorrect.']);
+                return redirect()->route('account.settings')
+                    ->withErrors(['error' => 'L\'ancien mot de passe est incorrect.']);
             }
 
             $user->password = Hash::make($request->input('inputNewPassword'));
@@ -101,7 +106,7 @@ class UserController extends Controller
     
         $user->save();
         Auth::logout();
-        return redirect()->route('settings');
+        return redirect()->route('account.settings');
     }
 
     public function deleteAccount() {
