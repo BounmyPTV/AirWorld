@@ -12,7 +12,7 @@
         <div class="row h-100 g-0">
             <div id="scrollable-cart" class="scrollspy-example p-4" data-bs-spy="scroll" data-bs-target="#summary-nav" data-bs-offset="0" tabindex="0">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="mb-0">Mon panier</h4>
+                    <h4 class="mb-0">Mes Reservations</h4>
                     <span class="text-muted">{{ count($res) }} révervations</span>
                 </div>
 
