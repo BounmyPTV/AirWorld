@@ -10,7 +10,7 @@
     <div class="body d-md-flex align-items-center justify-content-between rounded-4 shadow overflow-hidden">
         
         {{-- Partie gauche avec l'image --}}
-        <div class="box-1 w-75 d-none d-md-block h-100">
+        <div class="box-1 w-75 d-none d-xl-block h-100">
             <img src="{{ ImgHelper::img_section('login1') }}"
             class="w-100 h-100"
             style="object-fit: cover; object-position: center;" 

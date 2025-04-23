@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('firstname');
             $table->string('surname');
             $table->string('seat_number');
-            $table->foreignId('reservation_id');
+            $table->foreignId('reservation_id')->constrained()->onDelete('cascade');
+            $table->boolean('adult')->default(true);
             $table->timestamps();
         });
     }
