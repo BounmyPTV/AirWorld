@@ -28,4 +28,14 @@ class CartController extends Controller
         $reservation->delete();
         return redirect()->back();
     }
+
+    public function apply_cart() {
+        $user = Auth::user();
+
+        Reservation::where('user_id', $user->id)
+            ->where('price', false)
+            ->update(['price' => true]);
+
+        return redirect()->route('account.myreservation')->with('success', 'Paiement effectué avec succès !');
+    }
 }

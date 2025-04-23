@@ -10,12 +10,11 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 </head>
 <body data-bs-theme="">
-    <div class="position-fixed bottom-0 end-0 mb-3 me-3 p-2" style="width: 50px; height: 50px;">
-   
-   <button id="themeToggle" class="btn btn-primary w-100 h-100 d-flex justify-content-center align-items-center shadow p-0">
-       <span id="themeIcon"></span>
-   </button>
-</div>
+    <div class="position-fixed bottom-0 end-0 mb-3 me-3 p-2" style="width: 50px; height: 50px; z-index: 1080;">
+        <button id="themeToggle" class="btn btn-primary w-100 h-100 d-flex justify-content-center align-items-center shadow p-0">
+            <span id="themeIcon"></span>
+        </button>
+    </div>
     @yield('content')
     <script>
         const buttonTheme = document.getElementById('themeToggle');

@@ -42,7 +42,7 @@ class AdminController extends Controller {
     // Afficher la liste des utilisateur
     public function users(){
         $users = User::all();
-        return view("admin.user.index" , compact("users"));
+        return view("admin.user.index" , ['users' => $users]);
     }
 
 

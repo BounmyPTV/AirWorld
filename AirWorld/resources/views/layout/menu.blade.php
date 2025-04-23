@@ -206,14 +206,14 @@
         </nav>
         {{-- Contenu Navbar (les interactions des boutons de navbar) --}}
         <div class=" position-relative">
-            <div id="contentSections" class="bg-body d-grid border-bottom shadow-sm rounded-bottom w-100"
+            <div id="contentSections" class="bg-body-secondary d-grid border-bottom shadow-sm rounded-bottom w-100"
                 style="position: absolute; top: 0; left: 0; width: 100vw;">
                 @foreach ($navbar_menu_section as $index => $section)
                     <div id="{{ $section['id'] }}" class="content-section d-none container-fluid py-3 
                                                                 d-grid gap-3 responsive-grid-layout align-items-stretch">
 
                         {{-- Côté gauche --}}
-                        <div class="list-group border rounded-3 p-1 bg-body-secondary h-100 shadow-sm">
+                        <div class="list-group border rounded-3 p-1 bg-body h-100 shadow-sm">
                             @if (is_array($section['left']))
                                 @foreach ($section['left'] as $i => $item)
                                     <a href="{{ $item['right'] }}"
@@ -231,7 +231,7 @@
 
                         {{-- Côté droit --}}
                         <div class="carousel bg-body-secondary slide h-100 d-none d-md-block shadow-sm rounded-2" id="carouselRightContent{{ $index }}"
-                            data-bs-ride="carousel" data-bs-interval="5000">
+                            data-bs-ride="carousel" data-bs-interval="3500">
                             <div class="carousel-inner rounded-2 h-100">
                                 @foreach($section['right'] as $i => $item)
                                     <div class="carousel-item {{ $i === 0 ? 'active' : '' }} text-center h-100">
@@ -252,9 +252,8 @@
                             @if (count($section['right']) > 1)
                                 <div class="carousel-indicators">
                                     @foreach ($section['right'] as $i => $item)
-                                        <button class="bg-light" type="button" data-bs-target="#carouselRightContent{{ $index }}"
-                                            data-bs-slide-to="{{ $i }}" class="{{ $i === 0 ? 'active' : '' }}"
-                                            aria-current="{{ $i === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $i + 1 }}"></button>
+                                    <button class="bg-light {{ $i === 0 ? 'active' : '' }}" type="button" data-bs-target="#carouselRightContent{{ $index }}"
+                                    data-bs-slide-to="{{ $i }}" aria-current="{{ $i === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $i + 1 }}"></button>
                                     @endforeach
                                 </div>
                             @endif

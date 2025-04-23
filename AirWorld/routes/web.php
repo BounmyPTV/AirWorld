@@ -4,6 +4,7 @@ use App\Http\Controllers\SystemController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
 
 // Auth routes
@@ -16,17 +17,19 @@ Route::name('form.')->group(function () {
     Route::post('/register', [UserController::class, 'register'])->name('register');
 });
 
+Route::get('/account', [UserController::class, 'settings'])->middleware('auth')->name('account');
+
 // Account routes (auth required)
-Route::prefix('/account')->name('account')->middleware('auth')->group(function () {
-    Route::get('/', [UserController::class, 'settings']);
+Route::prefix('/account')->name('account.')->middleware('auth')->group(function () {
+    Route::delete('/logout', [UserController::class, 'logoutAccount'])->name('logout');
+    Route::post('/update', [UserController::class, 'updateAccount'])->name('update');
+    Route::delete('/delete', [UserController::class, 'deleteAccount'])->name('delete');
+    Route::post('/cart/delete', [UserController::class, 'delete_cart'])->name('delete_cart');
 
-    Route::delete('/logout', [UserController::class, 'logoutAccount'])->name('.logout');
-    Route::post('/update', [UserController::class, 'updateAccount'])->name('.update');
-    Route::delete('/delete', [UserController::class, 'deleteAccount'])->name('.delete');
-    Route::post('/cart/delete', [UserController::class, 'delete_cart'])->name('.delete_cart');
+    Route::get('/cart', [CartController::class, 'cart'])->name('cart');
+    Route::post('/cart/checkout', [CartController::class, 'apply_cart'])->name('checkout');
 
-    Route::get('/cart', [CartController::class, 'cart'])->name('.cart');
-    Route::get('/reservation', [UserController::class, 'myreservation'])->name('.myreservation');
+    Route::get('/reservation', [ReservationController::class, 'myreservation'])->name('myreservation');
 });
 
 // Public page
