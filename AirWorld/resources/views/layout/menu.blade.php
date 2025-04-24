@@ -206,14 +206,14 @@
         </nav>
         {{-- Contenu Navbar (les interactions des boutons de navbar) --}}
         <div class=" position-relative">
-            <div id="contentSections" class="bg-body-secondary d-grid border-bottom shadow-sm rounded-bottom w-100"
+            <div id="contentSections" class="bg-body-tertiary d-grid border-bottom shadow-sm rounded-bottom w-100"
                 style="position: absolute; top: 0; left: 0; width: 100vw;">
                 @foreach ($navbar_menu_section as $index => $section)
                     <div id="{{ $section['id'] }}" class="content-section d-none container-fluid py-3 
                                                                 d-grid gap-3 responsive-grid-layout align-items-stretch">
 
                         {{-- Côté gauche --}}
-                        <div class="list-group border rounded-3 p-1 bg-body h-100 shadow-sm">
+                        <div class="list-group border rounded-3 p-1 bg-body-secondary h-100 shadow-sm">
                             @if (is_array($section['left']))
                                 @foreach ($section['left'] as $i => $item)
                                     <a href="{{ $item['right'] }}"
@@ -265,12 +265,11 @@
     </div>
 
     {{-- Body --}}
-    <div class="container">
+    <main class="mb-2">
         @yield('content-menu')
-    </div>
+    </main>
 
     {{-- Footer --}}
-    <footer class="bg-body text-center py-4 mt-auto border-top">
         <footer class="bg-body text-center py-4 mt-auto border-top">
             <div class="container">
                 <div class="container">
@@ -358,7 +357,6 @@
                     </footer>
                 </div>
             </div>
-        </footer>
     </footer>
 
     {{-- partie script (js) --}}
