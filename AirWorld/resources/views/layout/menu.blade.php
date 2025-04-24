@@ -27,7 +27,7 @@
             card_navbar(0, 'Paris', $res),
             card_navbar(1, 'Seattle', $res),
             card_navbar(6, 'Bangkok', $res),
-            card_navbar(8, 'Vientiane', $res),
+            card_navbar(7, 'Vientiane', $res),
         ]
     );
     $navbar_menu->add_section(
@@ -38,7 +38,7 @@
             CardHelper::card('À la dernière minute', 'Réservez votre voyage à la dernière minute. C\'est encore possible!', "$res#book3")
         ],
         [
-            card_navbar(7, 'N\'attendez plus!', '#'),
+            card_navbar(8, 'N\'attendez plus!', '#'),
         ]
     );
     $navbar_menu->add_section(
@@ -217,7 +217,7 @@
                             @if (is_array($section['left']))
                                 @foreach ($section['left'] as $i => $item)
                                     <a href="{{ $item['right'] }}"
-                                        class="list-group-item list-group-item-action flex-column align-items-start h-100">
+                                        class="list-group-item list-group-item-action flex-column align-items-start h-100 group-button">
                                         <div class="d-flex justify-content-between">
                                             <h5 class="mb-1">{{ $item['id'] }}</h5>
                                         </div>
@@ -230,7 +230,7 @@
                         </div>
 
                         {{-- Côté droit --}}
-                        <div class="carousel bg-body-secondary slide h-100 d-none d-md-block shadow-sm rounded-2" id="carouselRightContent{{ $index }}"
+                        <div class="carousel bg-body-secondary slide shadow h-100 d-none d-md-block rounded-2" id="carouselRightContent{{ $index }}"
                             data-bs-ride="carousel" data-bs-interval="3500">
                             <div class="carousel-inner rounded-2 h-100">
                                 @foreach($section['right'] as $i => $item)
@@ -361,71 +361,74 @@
 
     {{-- partie script (js) --}}
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navLinks = document.querySelectorAll('.nav-toggle');
-            const sections = document.querySelectorAll('.content-section');
-            let currentVisibleSection = null;
+ document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('.nav-toggle');
+    const sections = document.querySelectorAll('.content-section');
+    const groupButtons = document.querySelectorAll('.group-button');
 
-            const routes = {
-                accContent: "{{ route('home') }}",
-                resContent: "{{ route('reservation') }}",
-                disContent: "{{ route('discover') }}"
-            };
+    let currentVisibleSection = null;
+    let lastClickTimes = {};
 
-            navLinks.forEach(link => {
-                let lastClickTime = 0;
+    const routes = {
+        accContent: "{{ route('home') }}",
+        resContent: "{{ route('reservation') }}",
+        disContent: "{{ route('discover') }}"
+    };
 
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
+    // Fonction pour cacher toutes les sections
+    const hideAllSections = () => {
+        sections.forEach(section => section.classList.add('d-none'));
+        navLinks.forEach(link => link.classList.remove('visible-link-border'));
+        currentVisibleSection = null;
+    };
 
-                    const targetId = link.getAttribute('data-target');
-                    const targetSection = document.getElementById(targetId);
+    // Gestion du clic sur les éléments du menu (navbar)
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('data-target');
+            const targetSection = document.getElementById(targetId);
+            const now = new Date().getTime();
+            const timeSinceLastClick = now - (lastClickTimes[targetId] || 0);
+            lastClickTimes[targetId] = now;
 
-                    if (!targetSection) return;
+            if (!targetSection) return;
 
-                    const now = new Date().getTime();
-                    const timeSinceLastClick = now - lastClickTime;
+            if (currentVisibleSection === targetSection) {
+                hideAllSections();
+            } else {
+                hideAllSections();
+                targetSection.classList.remove('d-none');
+                link.classList.add('visible-link-border');
+                currentVisibleSection = targetSection;
+            }
 
-                    // Si on clique sur le bouton déjà ouvert : on ferme tout
-                    if (currentVisibleSection === targetSection) {
-                        targetSection.classList.add('d-none');
-                        link.classList.remove('visible-link-border');
-                        currentVisibleSection = null;
-                    } else {
-                        // Fermer tous les autres
-                        sections.forEach(section => section.classList.add('d-none'));
-                        navLinks.forEach(l => l.classList.remove('visible-link-border'));
-
-                        // Ouvrir celui qu'on vient de cliquer
-                        targetSection.classList.remove('d-none');
-                        link.classList.add('visible-link-border');
-                        currentVisibleSection = targetSection;
-                    }
-
-                    // Redirection si double clic
-                    if (timeSinceLastClick < 400) {
-                        const destination = routes[targetId];
-                        const currentUrl = window.location.href.split(/[?#]/)[0];
-                        if (destination && currentUrl !== destination) {
-                            window.location.href = destination;
-                        }
-                    }
-
-                    lastClickTime = now;
-                });
-            });
-
-            // Clique en dehors : tout se ferme
-            document.addEventListener('click', (e) => {
-                const isNavClick = e.target.closest('.nav-toggle');
-                const isContentClick = e.target.closest('.content-section');
-
-                if (!isNavClick && !isContentClick) {
-                    sections.forEach(section => section.classList.add('d-none'));
-                    navLinks.forEach(link => link.classList.remove('visible-link-border'));
-                    currentVisibleSection = null;
+            if (timeSinceLastClick < 400) {
+                const destination = routes[targetId];
+                const currentUrl = window.location.href.split(/[?#]/)[0];
+                if (destination && currentUrl !== destination) {
+                    window.location.href = destination;
                 }
-            });
+            }
         });
+    });
+
+    // Fermer les sections si clic en dehors
+    document.addEventListener('click', (e) => {
+        const isNavClick = e.target.closest('.nav-toggle');
+        const isContentClick = e.target.closest('.content-section');
+
+        if (!isNavClick && !isContentClick) {
+            hideAllSections();
+        }
+    });
+
+    // Fermer les sections si clic sur un bouton à gauche
+    groupButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            hideAllSections();
+        });
+    });
+});
     </script>
 @endsection
