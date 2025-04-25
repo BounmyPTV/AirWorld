@@ -28,6 +28,7 @@ Route::prefix('/account')->name('account.')->middleware('auth')->group(function 
 
     Route::get('/cart', [CartController::class, 'cart'])->name('cart');
     Route::post('/cart/checkout', [CartController::class, 'apply_cart'])->name('checkout');
+    Route::delete('/cart/delete', [CartController::class, 'delete_cart'])->name('delete.cart');
 
     Route::get('/reservation', [ReservationController::class, 'myreservation'])->name('myreservation');
 });
@@ -37,5 +38,3 @@ Route::get('/', fn () => redirect()->route('home'));
 Route::get('/home', [SystemController::class, 'home'])->name('home');
 Route::get('/reservation', [SystemController::class, 'reservation'])->name('reservation');
 Route::get('/discover', [SystemController::class, 'discover'])->name('discover');
-
-Route::delete('/cart/delete', [CartController::class, 'delete_cart'])->name('delete.cart');
