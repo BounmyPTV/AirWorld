@@ -27,7 +27,7 @@
             card_navbar(0, 'Paris', $res),
             card_navbar(1, 'Seattle', $res),
             card_navbar(6, 'Bangkok', $res),
-            card_navbar(8, 'Vientiane', $res),
+            card_navbar(7, 'Vientiane', $res),
         ]
     );
     $navbar_menu->add_section(
@@ -38,7 +38,7 @@
             CardHelper::card('À la dernière minute', 'Réservez votre voyage à la dernière minute. C\'est encore possible!', "$res#book3")
         ],
         [
-            card_navbar(7, 'N\'attendez plus!', '#'),
+            card_navbar(8, 'N\'attendez plus!', '#'),
         ]
     );
     $navbar_menu->add_section(
@@ -195,7 +195,7 @@
                     @foreach ($navbar_button_section as $index => $section)
                         <li class="nav-item">
                             <a class="nav-link nav-toggle px-3 py-2 
-                                                {{ $section['right'] ? 'active text-primary fw-semibold' : 'text-body' }}"
+                                                        {{ $section['right'] ? 'active text-primary fw-semibold' : 'text-body' }}"
                                 href="#" data-target="{{ $section['left'] }}">
                                 {{ $section['id'] }}
                             </a>
@@ -206,18 +206,19 @@
         </nav>
         {{-- Contenu Navbar (les interactions des boutons de navbar) --}}
         <div class=" position-relative">
-            <div id="contentSections" class="bg-body-secondary d-grid border-bottom shadow-sm rounded-bottom w-100"
+            <div id="contentSections" class="bg-body-tertiary d-grid border-bottom shadow-sm rounded-bottom w-100"
                 style="position: absolute; top: 0; left: 0; width: 100vw;">
                 @foreach ($navbar_menu_section as $index => $section)
-                    <div id="{{ $section['id'] }}" class="content-section d-none container-fluid py-3 
-                                                                d-grid gap-3 responsive-grid-layout align-items-stretch">
+                    <div id="{{ $section['id'] }}"
+                        class="content-section d-none container-fluid py-3 
+                                                                        d-grid gap-3 responsive-grid-layout align-items-stretch">
 
                         {{-- Côté gauche --}}
-                        <div class="list-group border rounded-3 p-1 bg-body h-100 shadow-sm">
+                        <div class="list-group border rounded-3 p-1 bg-body-secondary h-100 shadow-sm">
                             @if (is_array($section['left']))
                                 @foreach ($section['left'] as $i => $item)
                                     <a href="{{ $item['right'] }}"
-                                        class="list-group-item list-group-item-action flex-column align-items-start h-100">
+                                        class="list-group-item list-group-item-action flex-column align-items-start h-100 group-button">
                                         <div class="d-flex justify-content-between">
                                             <h5 class="mb-1">{{ $item['id'] }}</h5>
                                         </div>
@@ -230,8 +231,8 @@
                         </div>
 
                         {{-- Côté droit --}}
-                        <div class="carousel bg-body-secondary slide h-100 d-none d-md-block shadow-sm rounded-2" id="carouselRightContent{{ $index }}"
-                            data-bs-ride="carousel" data-bs-interval="3500">
+                        <div class="carousel bg-body-secondary slide shadow h-100 d-none d-md-block rounded-2"
+                            id="carouselRightContent{{ $index }}" data-bs-ride="carousel" data-bs-interval="3500">
                             <div class="carousel-inner rounded-2 h-100">
                                 @foreach($section['right'] as $i => $item)
                                     <div class="carousel-item {{ $i === 0 ? 'active' : '' }} text-center h-100">
@@ -252,8 +253,9 @@
                             @if (count($section['right']) > 1)
                                 <div class="carousel-indicators">
                                     @foreach ($section['right'] as $i => $item)
-                                    <button class="bg-light {{ $i === 0 ? 'active' : '' }}" type="button" data-bs-target="#carouselRightContent{{ $index }}"
-                                    data-bs-slide-to="{{ $i }}" aria-current="{{ $i === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $i + 1 }}"></button>
+                                        <button class="bg-light {{ $i === 0 ? 'active' : '' }}" type="button"
+                                            data-bs-target="#carouselRightContent{{ $index }}" data-bs-slide-to="{{ $i }}"
+                                            aria-current="{{ $i === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $i + 1 }}"></button>
                                     @endforeach
                                 </div>
                             @endif
@@ -265,100 +267,92 @@
     </div>
 
     {{-- Body --}}
-    <div class="container">
+    <main class="mb-2">
         @yield('content-menu')
-    </div>
+    </main>
 
     {{-- Footer --}}
     <footer class="bg-body text-center py-4 mt-auto border-top">
-        <footer class="bg-body text-center py-4 mt-auto border-top">
+        <div class="container">
             <div class="container">
-                <div class="container">
-                    <footer class="py-5">
-                        <div class="row">
-                            <div class="col-6 col-md-2 mb-3">
-                                <h5>Nos Destinations</h5>
-                                <ul class="nav flex-column">
-                                    <li class="nav-item mb-2"><a href="#"
-                                            class="nav-link p-0 text-body-secondary">Europe</a>
-                                    </li>
-                                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Asie</a>
-                                    </li>
-                                    <li class="nav-item mb-2"><a href="#"
-                                            class="nav-link p-0 text-body-secondary">Amérique</a>
-                                    </li>
-                                    <li class="nav-item mb-2"><a href="#"
-                                            class="nav-link p-0 text-body-secondary">Afrique</a>
-                                    </li>
-                                    <li class="nav-item mb-2"><a href="#"
-                                            class="nav-link p-0 text-body-secondary">Océanie</a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="col-6 col-md-2 mb-3">
-                                <h5>Services</h5>
-                                <ul class="nav flex-column">
-                                    <li class="nav-item mb-2"><a href="#"
-                                            class="nav-link p-0 text-body-secondary">Réservations</a></li>
-                                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Billets
-                                            d'avion</a></li>
-                                    <li class="nav-item mb-2"><a href="#"
-                                            class="nav-link p-0 text-body-secondary">Assurances</a></li>
-                                    <li class="nav-item mb-2"><a href="#"
-                                            class="nav-link p-0 text-body-secondary">Hôtels</a>
-                                    </li>
-                                    <li class="nav-item mb-2"><a href="#"
-                                            class="nav-link p-0 text-body-secondary">Excursions</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="col-6 col-md-2 mb-3">
-                                <h5>Aide</h5>
-                                <ul class="nav flex-column">
-                                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQ</a>
-                                    </li>
-                                    <li class="nav-item mb-2"><a href="#"
-                                            class="nav-link p-0 text-body-secondary">Contactez-nous</a></li>
-                                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Termes et
-                                            conditions</a></li>
-                                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Politique
-                                            de
-                                            confidentialité</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="col-md-5 offset-md-1 mb-3">
-                                <form>
-                                    <h5>Inscrivez-vous à notre newsletter</h5>
-                                    <p>Recevez chaque mois des informations exclusives sur nos offres et destinations.</p>
-                                    <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-                                        <label for="newsletter1" class="visually-hidden">Adresse e-mail</label>
-                                        <input id="newsletter1" type="email" class="form-control"
-                                            placeholder="Adresse e-mail">
-                                        <button class="btn btn-primary" type="button">S'abonner</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-                            <p>&copy; {{ date('Y') }} AirWorld. Aucun droits réservés.</p>
-                            <ul class="list-unstyled d-flex">
-                                <li class="ms-3"><a class="link-body-emphasis" href="#" aria-label="Instagram"><svg
-                                            class="bi" width="24" height="24">
-                                            <use xlink:href="#instagram"></use>
-                                        </svg></a></li>
-                                <li class="ms-3"><a class="link-body-emphasis" href="#" aria-label="Facebook"><svg
-                                            class="bi" width="24" height="24" aria-hidden="true">
-                                            <use xlink:href="#facebook"></use>
-                                        </svg></a></li>
+                <footer class="py-5">
+                    <div class="row">
+                        <div class="col-6 col-md-2 mb-3">
+                            <h5>Nos Destinations</h5>
+                            <ul class="nav flex-column">
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Europe</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Asie</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Amérique</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Afrique</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Océanie</a>
+                                </li>
                             </ul>
                         </div>
-                    </footer>
-                </div>
+
+                        <div class="col-6 col-md-2 mb-3">
+                            <h5>Services</h5>
+                            <ul class="nav flex-column">
+                                <li class="nav-item mb-2"><a href="#"
+                                        class="nav-link p-0 text-body-secondary">Réservations</a></li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Billets
+                                        d'avion</a></li>
+                                <li class="nav-item mb-2"><a href="#"
+                                        class="nav-link p-0 text-body-secondary">Assurances</a></li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Hôtels</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#"
+                                        class="nav-link p-0 text-body-secondary">Excursions</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-6 col-md-2 mb-3">
+                            <h5>Aide</h5>
+                            <ul class="nav flex-column">
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQ</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#"
+                                        class="nav-link p-0 text-body-secondary">Contactez-nous</a></li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Termes et
+                                        conditions</a></li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Politique
+                                        de
+                                        confidentialité</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-5 offset-md-1 mb-3">
+                            <form>
+                                <h5>Inscrivez-vous à notre newsletter</h5>
+                                <p>Recevez chaque mois des informations exclusives sur nos offres et destinations.</p>
+                                <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                                    <label for="newsletter1" class="visually-hidden">Adresse e-mail</label>
+                                    <input id="newsletter1" type="email" class="form-control" placeholder="Adresse e-mail">
+                                    <button class="btn btn-primary" type="button">S'abonner</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+                        <p>&copy; {{ date('Y') }} AirWorld. Aucun droits réservés.</p>
+                        <ul class="list-unstyled d-flex">
+                            <li class="ms-3"><a class="link-body-emphasis" href="#" aria-label="Instagram"><svg class="bi"
+                                        width="24" height="24">
+                                        <use xlink:href="#instagram"></use>
+                                    </svg></a></li>
+                            <li class="ms-3"><a class="link-body-emphasis" href="#" aria-label="Facebook"><svg class="bi"
+                                        width="24" height="24" aria-hidden="true">
+                                        <use xlink:href="#facebook"></use>
+                                    </svg></a></li>
+                        </ul>
+                    </div>
+                </footer>
             </div>
-        </footer>
+        </div>
     </footer>
 
     {{-- partie script (js) --}}
@@ -366,7 +360,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             const navLinks = document.querySelectorAll('.nav-toggle');
             const sections = document.querySelectorAll('.content-section');
+            const groupButtons = document.querySelectorAll('.group-button');
+
             let currentVisibleSection = null;
+            let lastClickTimes = {};
 
             const routes = {
                 accContent: "{{ route('home') }}",
@@ -374,37 +371,34 @@
                 disContent: "{{ route('discover') }}"
             };
 
-            navLinks.forEach(link => {
-                let lastClickTime = 0;
+            // Fonction pour cacher toutes les sections
+            const hideAllSections = () => {
+                sections.forEach(section => section.classList.add('d-none'));
+                navLinks.forEach(link => link.classList.remove('visible-link-border'));
+                currentVisibleSection = null;
+            };
 
+            // Gestion du clic sur les éléments du menu (navbar)
+            navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-
                     const targetId = link.getAttribute('data-target');
                     const targetSection = document.getElementById(targetId);
+                    const now = new Date().getTime();
+                    const timeSinceLastClick = now - (lastClickTimes[targetId] || 0);
+                    lastClickTimes[targetId] = now;
 
                     if (!targetSection) return;
 
-                    const now = new Date().getTime();
-                    const timeSinceLastClick = now - lastClickTime;
-
-                    // Si on clique sur le bouton déjà ouvert : on ferme tout
                     if (currentVisibleSection === targetSection) {
-                        targetSection.classList.add('d-none');
-                        link.classList.remove('visible-link-border');
-                        currentVisibleSection = null;
+                        hideAllSections();
                     } else {
-                        // Fermer tous les autres
-                        sections.forEach(section => section.classList.add('d-none'));
-                        navLinks.forEach(l => l.classList.remove('visible-link-border'));
-
-                        // Ouvrir celui qu'on vient de cliquer
+                        hideAllSections();
                         targetSection.classList.remove('d-none');
                         link.classList.add('visible-link-border');
                         currentVisibleSection = targetSection;
                     }
 
-                    // Redirection si double clic
                     if (timeSinceLastClick < 400) {
                         const destination = routes[targetId];
                         const currentUrl = window.location.href.split(/[?#]/)[0];
@@ -412,21 +406,24 @@
                             window.location.href = destination;
                         }
                     }
-
-                    lastClickTime = now;
                 });
             });
 
-            // Clique en dehors : tout se ferme
+            // Fermer les sections si clic en dehors
             document.addEventListener('click', (e) => {
                 const isNavClick = e.target.closest('.nav-toggle');
                 const isContentClick = e.target.closest('.content-section');
 
                 if (!isNavClick && !isContentClick) {
-                    sections.forEach(section => section.classList.add('d-none'));
-                    navLinks.forEach(link => link.classList.remove('visible-link-border'));
-                    currentVisibleSection = null;
+                    hideAllSections();
                 }
+            });
+
+            // Fermer les sections si clic sur un bouton à gauche
+            groupButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    hideAllSections();
+                });
             });
         });
     </script>
