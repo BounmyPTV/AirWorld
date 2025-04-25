@@ -126,7 +126,6 @@ public function add_user(Request $request) {
             'surname' => 'required|string|max:255',
             'seat_number' => 'required|string|max:10',
             'reservation_id' => 'required|exists:reservations,id',
-            'adult' => 'required|boolean'
         ]);
             Passenger::create($request->all());
             return redirect()->route('admin')
@@ -225,21 +224,148 @@ public function add_user(Request $request) {
     public function update_airplane(Request $request) {
         $request->validate([
             'id' => 'required|integer|exists:airports,id',
-            'name' => 'nullable|string|max:255', 
-            'country' => 'nullable|string|max:255'
+            'model' => 'nullable|string|max:255', 
+            'seats' => 'nullable|number|min:1'
         ]);
 
-        $airport = Airport::find($request->input('id'));
+        $airplane = Airplane::find($request->input('id'));
+    
+        if ($request->filled('model')) {
+            $airplane->model = $request->input('model');
+        }
+        if ($request->filled('seats')) {
+            $airplane->seats = $request->input('seats');
+        }
+        $airplane->save();
+        return $this->redirection('update_airplane', 'l\'avion a été mise à jour.');
+    }
+
+    public function update_flight(Request $request) {
+        $request->validate([
+            'id' => 'required|integer|exists:flights,id',
+            'departure_date' => 'nullable|date',
+            'arrival_date' => 'nullable|date',
+            'departure_time' => 'nullable|date_format:H:i',
+            'arrival_time' => 'nullable|date_format:H:i',
+            'departure_airport_id' => 'nullable|integer|min:1', 
+            'arrival_airport_id' => 'nullable|integer|min:1',
+            'airplane_id' => 'nullable|integer|min:1',
+            'price' => 'nullable|integer|min:1'
+            
+        ]);
+
+        $flight = Flight::find($request->input('id'));
+    
+        if ($request->filled('departure_date')) {
+            $flight->departure_date = $request->input('departure_date');
+        }
+        if ($request->filled('arrival_date')) {
+            $flight->arrival_date = $request->input('arrival_date');
+        }
+        if ($request->filled('departure_time')) {
+            $flight->departure_time = $request->input('departure_time');
+        }
+        if ($request->filled('arrival_time')) {
+            $flight->arrival_time = $request->input('arrival_time');
+        }
+        if ($request->filled('departure_airport_id')) {
+            $flight->departure_airport_id = $request->input('departure_airport_id');
+        }
+        if ($request->filled('arrival_airport_id')) {
+            $flight->arrival_airport_id = $request->input('arrival_airport_id');
+        }
+        if ($request->filled('airplane_id')) {
+            $flight->airplane_id = $request->input('airplane_id');
+        }
+        if ($request->filled('price')) {
+            $flight->price = $request->input('price');
+        }
+        $flight->save();
+        return $this->redirection('update_flight', 'le vol a été mise à jour.');
+    }
+
+    public function update_reservation(Request $request) {
+        $request->validate([
+            'id' => 'required|integer|exists:reservations,id',
+            'flight_id' => 'nullable|integer|exists:flights,id',
+            'user_id' => 'nullable|integer|exists:users,id',
+            'baggages' => 'nullable|integer|min:1',
+            'price' => 'nullable|integer|min:1'
+        ]);
+
+        $reservation = Reservation ::find($request->input('id'));
+    
+        if ($request->filled('flight_id')) {
+            $reservation->flight_id = $request->input('flight_id');
+        }
+        if ($request->filled('user_id')) {
+            $reservation->user_id = $request->input('user_id');
+        }
+        if ($request->filled('baggages')) {
+            $reservation->baggages = $request->input('baggages');
+        }
+        if ($request->filled('price')) {
+            $reservation->price = $request->input('price');
+        }
+        $reservation->save();
+        return $this->redirection('update_reservation', 'la reservation a été mise à jour.');
+    }
+
+    public function update_user(Request $request) {
+        $request->validate([
+            'id' => 'required|integer|exists:users,id',
+            'name' => 'nullable|string|min:2',
+            'surname' => 'nullable|string|min:2',
+            'email' => 'nullable|email|unique:users, email',
+            'password' => 'nullable|min:4'
+        ]);
+
+        $user = User::find($request->input('id'));
     
         if ($request->filled('name')) {
-            $airport->name = $request->input('name');
+            $user->name = $request->input('name');
         }
-        if ($request->filled('country')) {
-            $airport->country = $request->input('country');
+        if ($request->filled('surname')) {
+            $user->surname = $request->input('surname');
         }
-        $airport->save();
-        return $this->redirection('update_airport', 'l\'aéroport a été mise à jour.');
+        if ($request->filled('email')) {
+            $user->email = $request->input('email');
+        }
+        if ($request->filled('password')) {
+            $user->password = $request->input('password');
+        }
+        $user->save();
+        return $this->redirection('update_user', 'l\'utilisateur a été mise à jour.');
     }
-}
+    public function update_passenger(Request $request) {
+        $request->validate([
+            'id' => 'required|integer|exists:passengers,id',
+            'firstname' => 'nullable|string|max:255',
+            'surname' => 'nullable|string|max:255',
+            'seat_number' => 'nullable|string|max:10',
+            'reservation_id' => 'nullable|exists:reservations,id',
+            'adult' => 'nullable|boolean'
+        ]);
 
+        $passenger = Passenger::find($request->input('id'));
     
+        if ($request->filled('firstname')) {
+            $passenger->firstname = $request->input('firstname');
+        }
+        if ($request->filled('surname')) {
+            $passenger->surname = $request->input('surname');
+        }
+        if ($request->filled('seat_number')) {
+            $passenger->seat_number = $request->input('seat_number');
+        }
+        if ($request->filled('reservation_id')) {
+            $passenger->reservation_id = $request->input('reservation_id');
+        }
+        if ($request->filled('adult')) {
+            $passenger->adult = $request->input('adult');
+        }
+        $passenger->save();
+        return $this->redirection('update_passenger', 'le passager a été mise à jour.');
+    }
+
+}

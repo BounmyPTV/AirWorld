@@ -15,7 +15,7 @@ $add = [
     'user' => [Schema::getColumnListing('users'), route('Add_User')],
 ];
 
-$ignore_add = ['id', 'created_at', 'updated_at', 'email_verified_at', 'remember_token'];
+$ignore_add = ['id', 'created_at', 'updated_at','adult', 'email_verified_at', 'remember_token'];
 
 $delete = [
         "airport" => route('Delete_Airport'), 
@@ -35,7 +35,7 @@ $update = [
     'user' => [Schema::getColumnListing('users'), route('Update_User')],
 ];
 
-$ignore_update = ['created_at', 'updated_at', 'email_verified_at', 'remember_token'];
+$ignore_update = ['created_at', 'updated_at', 'adult','email_verified_at', 'remember_token'];
 
 @endphp    
 
@@ -117,7 +117,7 @@ $ignore_update = ['created_at', 'updated_at', 'email_verified_at', 'remember_tok
             @endif
         @endforeach
 
-        <input type="submit" name="send" value="Add {{ ucfirst($name) }}">
+        <input type="submit" name="send" value="Update {{ ucfirst($name) }}">
     </form>
     @if(session()->has('update_{{$name}}'))
         <p>{{session()->get("update_".$name)}}</p>
