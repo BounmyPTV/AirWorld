@@ -21,12 +21,12 @@ Route::prefix('/admin/add')->group(function(){
 
 Route::prefix('/admin/delete')->group(function(){
     
-    Route::post('/airport' , [AdminController::class, 'delete_airport'])->name('Delete_Airport');
-    Route::post('/airplane' , [AdminController::class, 'delete_airplane'])->name('Delete_Airplane');
-    Route::post('/flight' , [AdminController::class, 'delete_flight'])->name('Delete_Flight');
-    Route::post('/passenger' , [AdminController::class, 'delete_passenger'])->name('Delete_Passenger');
-    Route::post('/user' , [AdminController::class, 'delete_user'])->name('Delete_User');
-    Route::post('/reservation' , [AdminController::class, 'delete_reservation'])->name('Delete_Reservation');
+    Route::delete('/airport' , [AdminController::class, 'delete_airport'])->name('Delete_Airport');
+    Route::delete('/airplane' , [AdminController::class, 'delete_airplane'])->name('Delete_Airplane');
+    Route::delete('/flight' , [AdminController::class, 'delete_flight'])->name('Delete_Flight');
+    Route::delete('/passenger' , [AdminController::class, 'delete_passenger'])->name('Delete_Passenger');
+    Route::delete('/user' , [AdminController::class, 'delete_user'])->name('Delete_User');
+    Route::delete('/reservation' , [AdminController::class, 'delete_reservation'])->name('Delete_Reservation');
 
 });
 

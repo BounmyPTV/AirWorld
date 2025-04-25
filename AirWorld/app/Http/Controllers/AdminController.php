@@ -25,10 +25,12 @@ class AdminController extends Controller {
         $reservations = Reservation::all();
         $passengers = Passenger::all();
         return view("admin", compact("airports","airplanes","flights","users",
-                                    "reservations","passengers"));
+                                    "reservations","passengers",));
     }
 
-    
+    public function redirection(string $name, string $catchphrase) {
+        return redirect()->route('admin')->with("success_" . $name, $catchphrase);
+    }
 
 //     // Ajouter un aéroport via une requête HTTP
 public function add_airport(Request $request) {
@@ -41,7 +43,8 @@ public function add_airport(Request $request) {
             "name" => $request->input('name'),
             "country" => $request->input('country')
         ]);
-        return redirect()->route('admin')->with('success_airport', 'Aéroport ajouté avec succès.');
+        return $this->redirection('airport', 'Aéroport ajouté avec succès.'); 
+        // redirect()->route('admin')->with('success_airport', 'Aéroport ajouté avec succès.');
     
 }
 
@@ -133,113 +136,110 @@ public function add_user(Request $request) {
     // Suprimmer un aéroport
     public function delete_airport(Request $request) {
         $request->validate([
-            'name' => 'required|string',
-            'country' => 'required|string'
+            'airport_id' => 'required|integer|exists:airports,id'
         ]);
-
-        $airport = Airport::where('name', $request->input('name'))
-                        ->where('country', $request->input('country'))
-                        ->firstOrFail();
-
-        $airport->delete();
-        return redirect()->route('admin')->with('supprime_airport', 'Aéroport supprimé avec succès.');
+    
+        Airport::findOrFail($request->input('airport_id'))->delete();
+        
+        return redirect()->route('admin')
+            ->with('delete_airport', 'L’aéroport a bien été supprimé.');
     }
+    
 
     // Supprimer un avion
     public function delete_airplane(Request $request) {
         $request->validate([
-            'model' => 'required|string',
-            'seats' => 'required|integer|min:1'
+            'airplane_id' => 'required|integer|exists:airplanes,id'
         ]);
-        $airplane = Airplane::where('model', $request->input('model'))
-                            ->where('seats', $request->input('seats'))
-                            ->first();
-        if (!$airplane) {
-            return redirect()->route('admin')->with('supprime_airplane', 'Aucun avion correspondant trouvé.');
-        }
-        $airplane->delete();
-        return redirect()->route('admin')->with('supprime_airplane', 'Avion supprimé avec succès.');
-    }
     
+        Airplane::findOrFail($request->input('airplane_id'))->delete();
+        
+        return redirect()->route('admin')
+            ->with('delete_airplane', 'L’avion a bien été supprimé.');
+    }
+    //supprimer un vol
+    public function delete_flight(Request $request) {
+        $request->validate([
+            'flight_id' => 'required|integer|exists:flights,id'
+        ]);
+    
+        Flight::findOrFail($request->input('flight_id'))->delete();
+    
+        return redirect()->route('admin')
+            ->with('delete_flight', 'Le vol a bien été supprimé.');
+    }
+    // supprimer un user
+    public function delete_user(Request $request) {
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id'
+        ]);
+    
+        User::findOrFail($request->input('user_id'))->delete();
+        
+        return redirect()->route('admin')
+            ->with('delete_user', 'L\'utilisateur a bien été supprimé.');
+    }
+    // supprimer une reservation
+    public function delete_reservation(Request $request) {
+        $request->validate([
+            'reservation_id' => 'required|integer|exists:reservations,id'
+        ]);
+    
+        Reservation::findOrFail($request->input('reservation_id'))->delete();
+        
+        return redirect()->route('admin')
+            ->with('delete_reservation', 'La reservation a bien été supprimé.');
+    }
+    // supprimer un passager
+    public function delete_passenger(Request $request) {
+        $request->validate([
+            'passenger_id' => 'required|integer|exists:passengers,id'
+        ]);
+    
+        Passenger::findOrFail($request->input('passenger_id'))->delete();
+        
+        return redirect()->route('admin')
+            ->with('delete_passenger', 'Le passager a bien été supprimé.');
+    }
+
+    
+    public function update_airport(Request $request) {
+        $request->validate([
+            'id' => 'required|integer|exists:airports,id',
+            'name' => 'nullable|string|max:255', 
+            'country' => 'nullable|string|max:255'
+        ]);
+
+        $airport = Airport::find($request->input('id'));
+    
+        if ($request->filled('name')) {
+            $airport->name = $request->input('name');
+        }
+        if ($request->filled('country')) {
+            $airport->country = $request->input('country');
+        }
+        $airport->save();
+        return $this->redirection('update_airport', 'l\'aéroport a été mise à jour.');
+    }
+
+    public function update_airplane(Request $request) {
+        $request->validate([
+            'id' => 'required|integer|exists:airports,id',
+            'name' => 'nullable|string|max:255', 
+            'country' => 'nullable|string|max:255'
+        ]);
+
+        $airport = Airport::find($request->input('id'));
+    
+        if ($request->filled('name')) {
+            $airport->name = $request->input('name');
+        }
+        if ($request->filled('country')) {
+            $airport->country = $request->input('country');
+        }
+        $airport->save();
+        return $this->redirection('update_airport', 'l\'aéroport a été mise à jour.');
+    }
 }
 
     
-
-//     // Mise à jour dans la table airplane d'une ligne avec son id
-//     public function update_airplane(Request $request, $id) {
-//         $request->validate([
-//             "model" => "required|string|max:255",
-//             "seats" => "required|integer|min:1",
-//         ]);
-
-//         $airplane = Airplane::findOrFail($id);
-//         $airplane->update($request->all());
-
-//         return redirect()->route('admin.airplanes.index')
-//             ->with('success', 'L\'avion a bien été mis à jour.');
-//     }
-
-//     // Mise à jour dans la table flight d'une ligne avec son id
-//     public function update_flight(Request $request, $id) {
-//         $request->validate([
-//             'departure_date' => 'required|date',
-//             'arrival_date' => 'required|date',
-//             'departure_time' => 'required|date_format:H:i',
-//             'arrival_time' => 'required|date_format:H:i',
-//         ]);
-
-//         $flight = Flight::findOrFail($id);
-//         $flight->update($request->all());
-
-//         return redirect()->route('admin.flights.index')
-//             ->with('success', 'Le vol a bien été mis à jour.');
-//     }
-
-//     //Mise à jour dans la tables user d'une ligne avec son id
-//     public function update_user(Request $request, $id){
-//         $request->validate([
-//             'name' => 'required|string|max:255',
-//             'email' => 'required|email',
-//             'password' => 'required'
-            
-//         ]);
-
-//         $user = User::firstOrFail($id);
-//         $user->update($request->all());
-            
-//         return redirect()->route('admin.users.index')
-//             ->with('success' , 'Le compte a bien mis à jour');
-//     }
-
-//     // Mise à jour dans la table reservation d'une ligne avec son id
-//     public function update_reservation(Request $request, $id){
-//         $request->validate([
-//             'user_id' => ['required',User::exists('users','id')],
-//             'flight_id' => ['required',Flight::exists('flights','id')],
-//             'baggages' => 'required|integer|min:1',
-//             'price' => 'required|integer|min:1'
-//         ]);
-
-//         $reservation = Reservation::firstOrFail($id);
-//         $reservation->update($request->all());
-
-//         return redirect()->route('admin.reservation.index')
-//             ->with('success','La réservation a bien été mis à jour');
-//     }
-
-//     // Mise à jour dans la table de passenger d'une ligne avec son id
-//     public function update_passenger(Request $request, $id){
-//         $request->validate([
-//             'firstname' => 'required|string|max:255',
-//             'surname' => 'required|string|max:255',
-//             'seat_number' => 'required|integer|min:1',
-//             'reservation_id' => 'required|integer|min:1'
-//         ]);
-
-//         $passenger = Passenger::firstOrFail($id);
-//         $passenger->update($request->all());
-
-//         return redirect()->route('admin.passenger.index')
-//             ->with('success','Le passagère a bien été mis à jour');
-//     
-

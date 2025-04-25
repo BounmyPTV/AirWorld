@@ -2,237 +2,129 @@
 @section('title', 'admin')
 @section('content')
 
+    @php
+use Illuminate\Support\Facades\Schema;
 
 
-    @if($errors->any())
+$add = [
+    'airport' => [Schema::getColumnListing('airports'), route('Add_Airport')],
+    'airplane' => [Schema::getColumnListing('airplanes'), route('Add_Airplane')],
+    'reservation' => [Schema::getColumnListing('reservations'), route('Add_Reservation')],
+    'flight' => [Schema::getColumnListing('flights'), route('Add_Flight')],
+    'passenger' => [Schema::getColumnListing('passengers'), route('Add_Passenger')],
+    'user' => [Schema::getColumnListing('users'), route('Add_User')],
+];
+
+$ignore_add = ['id', 'created_at', 'updated_at', 'email_verified_at', 'remember_token'];
+
+$delete = [
+        "airport" => route('Delete_Airport'), 
+        "airplane" => route('Delete_Airplane'), 
+        "flight" => route('Delete_Flight') ,
+        "reservation" => route('Delete_Reservation'), 
+        "passenger" => route('Delete_Passenger') ,
+        "user" => route('Delete_User')
+    ];
+
+$update = [
+    'airport' => [Schema::getColumnListing('airports'), route('Update_Airport')],
+    'airplane' => [Schema::getColumnListing('airplanes'), route('Update_Airplane')],
+    'reservation' => [Schema::getColumnListing('reservations'), route('Update_Reservation')],
+    'flight' => [Schema::getColumnListing('flights'), route('Update_Flight')],
+    'passenger' => [Schema::getColumnListing('passengers'), route('Update_Passenger')],
+    'user' => [Schema::getColumnListing('users'), route('Update_User')],
+];
+
+$ignore_update = ['created_at', 'updated_at', 'email_verified_at', 'remember_token'];
+
+@endphp    
+
+@if($errors->any())
         @foreach($errors->all() as $error)
             <p>{{$error}}</p>
             @endforeach
-    @endif  
-    
-    <form  action="{{route('Add_Airport')}}" method="post">
-        Add airport <br>
-        1.Name:
-        <input type="text" name="name"> <br>
-        2.Country:  
-        <input type="text" name="country"> <br>
-        <input type="submit" name="send" value="Add">
+    @endif
+@foreach($add as $name => $list)
+    <form action="{{ $list[1] }}" method="post">
         @csrf
+        <h3>Add {{ $name }}</h3>
+
+        @php $i = 1; @endphp
+        @foreach($list[0] as $column)
+            @if(!in_array($column, $ignore_add))
+                @php
+                    // Déduction du type de champ
+                    $type = 'text';
+                    if (str_contains($column, 'date')) $type = 'date';
+                    elseif (str_contains($column, 'time')) $type = 'time';
+                    elseif (str_contains($column, 'email')) $type = 'email';
+                    elseif (str_contains($column, 'password')) $type = 'password';
+                    elseif ($column === 'id') $type = 'number';
+                    elseif (str_ends_with($column, '_id') || str_contains($column, 'price') || str_contains($column, 'seat')) $type = 'number';
+                @endphp
+
+                <label>{{ $i }}. {{ str_replace('_', ' ', $column) }}:</label>
+                <input type="{{ $type }}" name="{{ $column }}"> <br>
+                @php $i++; @endphp
+            @endif
+        @endforeach
+
+        <input type="submit" name="send" value="Add {{ ucfirst($name) }}">
     </form>
     <br>
-    @if(session()->has('success_airport'))
-        <p>{{session()->get('success_airport')}}</p>
+    @if(session()->has("success_".$name))
+    <p>{{session()->get("success_".$name)}}</p>
+@endif
+@endforeach
+
+{{-- Supprimer --}}
+@foreach($delete as $name => $route)
+<form action="{{ $route }}" method="POST">
+    <h3>Delete {{ $name }}</h3>
+    1. ID <br>
+    @csrf
+    @method('delete')
+    <input type="number" name="{{ $name }}_id">
+    <input type="submit" value="Delete" name="delete">
+</form>
+<br>
+@if(session()->has("supprime_".$name))
+    <p>{{session()->get("supprime_".$name)}}</p>
+@endif
+@endforeach
+
+@foreach($update as $name => $list)
+    <form action="{{ $list[1] }}" method="post">
+        @csrf
+        <h3>update {{ $name }}</h3>
+
+        @php $i = 1; @endphp
+        @foreach($list[0] as $column)
+            @if(!in_array($column, $ignore_update))
+                @php
+                    // Déduction du type de champ
+                    $type = 'text';
+                    if (str_contains($column, 'date')) $type = 'date';
+                    elseif (str_contains($column, 'time')) $type = 'time';
+                    elseif (str_contains($column, 'email')) $type = 'email';
+                    elseif (str_contains($column, 'password')) $type = 'password';
+                    elseif (str_ends_with($column, '_id') || str_contains($column, 'price') || str_contains($column, 'seat')) $type = 'number';
+                @endphp
+
+                <label>{{ $i }}. {{ str_replace('_', ' ', $column) }}:</label>
+                <input type="{{ $type }}" name="{{ $column }}"> <br>
+                @php $i++; @endphp
+            @endif
+        @endforeach
+
+        <input type="submit" name="send" value="Add {{ ucfirst($name) }}">
+    </form>
+    @if(session()->has('update_{{$name}}'))
+        <p>{{session()->get("update_".$name)}}</p>
     @endif
+@endforeach
+
    
-    
-    <form action="{{route('Add_Airplane')}}" method="post">
-        Add airplane <br>
-        1.Model: 
-        <input type="text" name="model"> <br>
-        2.Number of seats:
-        <input type="number" name="seats"> <br>
-        <input type="submit" name="send" value="Add">
-        @csrf
-    </form>
-    <br>
-    @if(session()->has('success_airplane'))
-    <p>{{session()->get('success_airplane')}}</p>
-    @endif
-    <form action="{{route('Add_Flight')}}" method="post">
-        Add flight <br>
-        1.Departure date: 
-        <input type="date" name="departure_date"> <br>
-        2.Arrival date: 
-        <input type="date" name="arrival_date"> <br>
-        3.Departure time:
-        <input type="time" name="departure_time"> <br>
-        4.Arrival time: 
-        <input type="time" name="arrival_time"> <br>
-        5.Departure airport id:
-        <input type="number" name="departure_airport_id"> <br>
-        6.Arrival airport id:
-        <input type="number" name="arrival_airport_id"> <br>
-        7.Airplane id:
-        <input type="number" name="airplane_id"> <br>
-        8.Price:
-        <input type="number" name="price"> <br>
-        <input type="submit" name="send" value="Add">
-        @csrf
-        
-    </form>
-    @if(session()->has('success_flight'))
-        <p>{{session()->get('success_flight')}}</p>
-    @endif
-    </div>
-    <br>
-    <form action="{{route('Add_User')}}" method="post">
-       Add user <br>
-       1.Name: 
-       <input type="text" name="name"> <br>
-       2.Surname:
-       <input type="text" name="surname"> <br>
-       3.Email: 
-       <input type="email" name="email"> <br>
-       4.Password: 
-       <input type="password" name="password"> <br>
-       <input type="submit" name="send" value="Add">
-       @csrf
-    </form>
-    <br>
-    @if(session()->has('success_user'))
-        <p>{{session()->get('success_user')}}</p>
-    @endif
-    <form action="{{route('Add_Reservation')}}" method="post">
-        Add reservation <br>
-        1.User id:
-        <input type="text" name="user_id"> <br>
-        2.Flight id:
-        <input type="text" name="flight_id"> <br>
-        3.Baggages weight:
-        <input type="number" name="baggages">kg <br>
-        4.Price: 
-        <input type="number" name="price">€ <br>
-        <input type="submit" name="send" value="Add">
-        @csrf
-    </form>
-    <br>
-    @if(session()->has('success_reservation'))
-        <p>{{session()->get('success_reservation')}}</p>
-    @endif
-
-    <form action="{{route('Add_Passenger')}}" method="post">
-        Add passenger <br>
-        1. First name:
-        <input type="text" name="firstname"> <br>
-        2. Surname:
-        <input type="text" name="surname"> <br>
-        3. Seat number:
-        <input type="text" name="seat_number"> <br>
-        4. Reservation id:
-        <input type="number" name="reservation_id"> <br>
-        5. Adult:
-        <select name="adult">
-            <option value="1">Yes</option>
-            <option value="0">No</option>
-        </select> <br>
-        <input type="submit" name="send" value="Add">
-        @csrf
-    </form>
-    
-    <br>
-    @if(session()->has('success_passenger'))
-        <p>{{session()->get('success_passenger')}}</p>
-    @endif
-
-
-    {{-- Supprimer --}}
-
-    <form  action="{{route('Delete_Airport')}}" method="post">
-        Delete airport <br>
-        1.Name:
-        <input type="text" name="name"> <br>
-        2.Country:  
-        <input type="text" name="country"> <br>
-        <input type="submit" name="delete" value="Delete">
-        @csrf
-    </form>
-    <br>
-    @if(session()->has('supprime_airport'))
-        <p>{{session()->get('supprime_airport')}}</p>
-    @endif
-    <form action="{{route('Delete_Airplane')}}" method="post">
-        Delete airplane <br>
-        1.Model: 
-        <input type="text" name="model"> <br>
-        2.Number of seats:
-        <input type="number" name="seats"> <br>
-        <input type="submit" name="send" value="Delete">
-        @csrf
-    </form>
-    <br>
-    @if(session()->has('supprime_airplane'))
-    <p>{{session()->get('supprime_airplane')}}</p>
-    @endif
-    <form action="{{route('Delete_Flight')}}" method="post">
-        Delete flight <br>
-        1.Departure date: 
-        <input type="date" name="departure_date"> <br>
-        2.Arrival date: 
-        <input type="date" name="arrival_date"> <br>
-        3.Departure time:
-        <input type="time" name="departure_time"> <br>
-        4.Arrival time: 
-        <input type="time" name="arrival_time"> <br>
-        5.Departure airport id:
-        <input type="number" name="departure_airport_id"> <br>
-        6.Arrival airport id:
-        <input type="number" name="arrival_airport_id"> <br>
-        7.Airplane id:
-        <input type="number" name="airplane_id"> <br>
-        8.Price:
-        <input type="number" name="price"> <br>
-        <input type="submit" name="send" value="Delete">
-        @csrf
-        
-    </form>
-    @if(session()->has('success_flight'))
-        <p>{{session()->get('success_flight')}}</p>
-    @endif
-    </div>
-    <br>
-    <form action="{{route('Delete_User')}}" method="post">
-        Delete user <br>
-       1.Name: 
-       <input type="text" name="name"> <br>
-       2.Surname:
-       <input type="text" name="surname"> <br>
-       3.Email: 
-       <input type="email" name="email"> <br>
-       4.Password: 
-       <input type="password" name="password"> <br>
-       <input type="submit" name="send" value="Delete">
-       @csrf
-    </form>
-    <br>
-    @if(session()->has('success_user'))
-        <p>{{session()->get('success_user')}}</p>
-    @endif
-    <form action="{{route('Delete_Reservation')}}" method="post">
-        Delete reservation <br>
-        1.User id:
-        <input type="text" name="user_id"> <br>
-        2.Flight id:
-        <input type="text" name="flight_id"> <br>
-        3.Baggages weight:
-        <input type="number" name="baggages">kg <br>
-        4.Price: 
-        <input type="number" name="price">€ <br>
-        <input type="submit" name="send" value="Delete">
-        @csrf
-    </form>
-    <br>
-    @if(session()->has('success_reservation'))
-        <p>{{session()->get('success_reservation')}}</p>
-    @endif
-
-    <form action="{{route('Delete_Passenger')}}" method="post">
-        Add passenger <br>
-        1. First name:
-        <input type="text" name="firstname"> <br>
-        2. Surname:
-        <input type="text" name="surname"> <br>
-        3. Seat number:
-        <input type="text" name="seat_number"> <br>
-        4. Reservation id:
-        <input type="number" name="reservation_id"> <br>
-        5. Adult:
-        <select name="adult">
-            <option value="1">Yes</option>
-            <option value="0">No</option>
-        </select> <br>
-        <input type="submit" name="send" value="Delete">
-        @csrf
-    </form>
 <div class="container mt-5">
     <h1 class="mb-4">Liste des Aéroports</h1>
 
