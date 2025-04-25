@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Flight;
+use App\Models\Airport;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class SystemController extends Controller
 {
     public function discover() { return view('discover'); }
-    public function reservation() { return view('reservation'); }
+
     public function home() { 
         $flight = Flight::with(['departureAirport', 'arrivalAirport', 'airplane']);
         $today = Carbon::now();

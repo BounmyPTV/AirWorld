@@ -36,5 +36,7 @@ Route::prefix('/account')->name('account.')->middleware('auth')->group(function 
 // Public page
 Route::get('/', fn () => redirect()->route('home'));
 Route::get('/home', [SystemController::class, 'home'])->name('home');
-Route::get('/reservation', [SystemController::class, 'reservation'])->name('reservation');
+Route::get('/reservation', [ReservationController::class, 'reservation'])->name('reservation');
+Route::get('/reservation/id/{id}', [ReservationController::class, 'show_reservation'])->name('reservation_id');
 Route::get('/discover', [SystemController::class, 'discover'])->name('discover');
+

@@ -14,28 +14,28 @@ class FlightSeeder extends Seeder
     {
         $airports = Airport::all();
         $airplanes = Airplane::all();
-
+    
         if ($airports->count() < 2 || $airplanes->count() == 0) {
             $this->command->error("Il faut au moins 2 aéroports et 1 avion pour générer des vols.");
             return;
         }
-
+    
         for ($i = 0; $i < 100; $i++) {
             // Dates de départ/arrivée (même jour ou jour suivant)
             $departureDate = now()->addDays(rand(1, 30))->format('Y-m-d');
-            $arrivalDate = $departureDate;
-
+            $arrivalDate = $departureDate;  // Ensure arrival is the same day for simplicity (could adjust if needed)
+    
             // Heure aléatoire de départ et arrivée (ex: départ à 08h, arrivée à 10h)
             $departureHour = rand(5, 20); // entre 5h et 20h
             $duration = rand(1, 5); // durée du vol en heures
-            $arrivalHour = $departureHour + $duration;
-
+            $arrivalHour = ($departureHour + $duration) % 24;  // Ensure the arrival hour is within 24h range
+    
             // Aéroports aléatoires (différents)
             $departureAirport = $airports->random();
             do {
                 $arrivalAirport = $airports->random();
             } while ($arrivalAirport->id === $departureAirport->id);
-
+    
             // Création du vol
             Flight::create([
                 'departure_date' => $departureDate,
@@ -49,4 +49,5 @@ class FlightSeeder extends Seeder
             ]);
         }
     }
+    
 }
