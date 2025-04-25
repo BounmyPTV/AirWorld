@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         $this->call([
+            AirportSeeder::class,
             UserSeeder::class,
             AirplaneSeeder::class,
-            AirportSeeder::class,
             FlightSeeder::class,
             ReservationSeeder::class,
             PassengerSeeder::class,
