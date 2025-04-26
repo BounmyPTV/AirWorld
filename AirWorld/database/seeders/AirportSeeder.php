@@ -18,9 +18,13 @@ class AirportSeeder extends Seeder
         }
 
         $lines = File::lines($path);
+        $i = 1;
 
         foreach ($lines as $line) {
             $fields = str_getcsv($line);
+
+            if ($i == 100) break;
+            $i++;
 
             if (count($fields) >= 4) {
                 Airport::create([

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Airport extends Model
 {
+    protected $fillable = ['name','country'];
     public function departureFlights() {
         return $this->hasMany(Flight::class, 'departure_airport_id');
     }
