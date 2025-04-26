@@ -5,337 +5,229 @@ namespace App\Http\Controllers;
 use App\Models\Airport;
 use App\Models\Flight;
 use App\Models\Airplane;
+use App\Models\User;
 use App\Models\Reservation;
 use App\Models\Passenger;
-use App\Models\User;
+
+use App\Http\Controllers\UserController;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller {
-    // Afficher la liste des aéroports
-    public function airports() {
-        $airports = Airport::all();
-        return view("admin.airports.index", compact("airports"));
+    public function show()
+    {
+        $airport = Airport::paginate(10, ['*'], 'airports_page');
+        $airplane = Airplane::paginate(10, ['*'], 'airplanes_page');
+        $flight = Flight::paginate(10, ['*'], 'flights_page');
+        $user = User::paginate(10, ['*'], 'users_page');
+        $reservation = Reservation::paginate(10, ['*'], 'reservations_page');
+        $passenger = Passenger::paginate(10, ['*'], 'passengers_page');
+    
+        return view('admin', ["list" => compact('airport', 'airplane', 'flight', 'user', 'reservation', 'passenger')]);
     }
 
-    // Afficher la liste des avions
-    public function airplanes() {
-        $airplanes = Airplane::all();
-        return view("admin.airplanes.index", compact("airplanes"));
+    public function redirection(string $name, string $catchphrase) {
+        return redirect()->route('admin')->with("success", $catchphrase);
     }
 
-    // Afficher la liste des vols
-    public function flights() {
-        $flights = Flight::all();
-        return view("admin.flights.index", compact("flights"));
-    }
-    // Afficher la liste des passagères
-    public function passengers(){
-        $passengers = Passenger::all();
-        return view("admin.passengers.index" , compact("passengers"));
-    }
-    // Afficher la liste des reservations
-    public function reservations(){
-        $reservation = Reservation::all();
-        return view("admin.reservation.index" , compact("reservations"));
-    }
-    // Afficher la liste des utilisateur
-    public function users(){
-        $users = User::all();
-        return view("admin.user.index" , ['users' => $users]);
-    }
-
-
-    #####
-#############
-    #####
-
-    // Ajouter des valeurs dans la table airport
-    public function create_airport(array $airportData) {
-        return Airport::firstOrCreate([
-            'name' => $airportData['name'],
-            'country' => $airportData['country'],
-        ]);
-    }
-
-    // Ajouter des valeurs dans la table airplane
-    public function create_airplane(array $airplaneData) {
-        return Airplane::firstOrCreate([
-            'model' => $airplaneData['model'],
-            'seats' => $airplaneData['seats'],
-        ]);
-    }
-
-    // Ajouter des valeurs dans la table flight
-    public function create_flight(array $flightData) {
-        return Flight::create([
-            'departure_date' => $flightData['departure_date'],
-            'arrival_date' => $flightData['arrival_date'],
-            'departure_time' => $flightData['departure_time'],
-            'arrival_time' => $flightData['arrival_time'],
-
-            'departure_airport_id' => $this->create_airport([
-                'name' => $flightData['departure_airport_name'],
-                'country' => $flightData['departure_airport_country'],
-            ])->id,
-
-            'arrival_airport_id' => $this->create_airport([
-                'name' => $flightData['arrival_airport_name'],
-                'country' => $flightData['arrival_airport_country'],
-            ])->id,
-            
-            'airplane_id' => $this->create_airplane([
-                'model' => $flightData['airplane_model'],
-                'seats' => $flightData['airplane_seats'],
-            ])->id,
-        ]);
-    }
-
-    //Ajouter des valeurs dans la table user
-    public function create_user(array $userData){
-        return User::create([
-            'name' => $userData['name'],
-            'email' => $userData['email'],
-            'password' => $userData['password']
-        ]);
-    }
-
-    // Ajouter des valeurs dans la table reservation
-    public function create_reservation(array $reservationData){
-        return Reservation::create([
-            'user_id' => $reservationData('user_id'),
-            'flight_id' => $reservationData('flight_id'),
-            'baggages' => $reservationData('baggages'),
-            'price' => $reservationData('price'),
-        ]);
-    }
-
-    // Ajouter des valeurs dans la table passenger
-    public function create_passenger(array $passengerData){
-        return Passenger::create([
-            'firstname' => $passengerData('firstname'),
-            'surname' => $passengerData('surname'),
-            'seat_number' => $passengerData('seatnumber'),
-            'reservation_id' => $passengerData('reservation_id')
-        ]);
-    }
-
-
-    // Ajouter un aéroport via une requête HTTP
     public function add_airport(Request $request) {
         $request->validate([
             "name" => "required|string|max:255",
             "country" => "required|string|max:255",
         ]);
-
-        $this->create_airport($request->all());
-
-        return redirect()->route('admin.airports.index')
-            ->with('success', 'L\'aéroport a bien été créé.');
+        Airport::create($request->only('name', 'country'));
+        return $this->redirection('airport', 'Aéroport ajouté avec succès.');
     }
 
-    // Ajouter un avion via une requête HTTP
     public function add_airplane(Request $request) {
         $request->validate([
             "model" => "required|string|max:255",
             "seats" => "required|integer|min:1",
         ]);
-
-        $this->create_airplane($request->all());
-
-        return redirect()->route('admin.airplanes.index')
-            ->with('success', 'L\'avion a bien été créé.');
+        Airplane::create($request->only('model', 'seats'));
+        return $this->redirection('airplane', "L'avion a bien été créé.");
     }
 
-    // Ajouter un vol via une requête HTTP
     public function add_flight(Request $request) {
         $request->validate([
             'departure_date' => 'required|date',
             'arrival_date' => 'required|date',
             'departure_time' => 'required|date_format:H:i',
             'arrival_time' => 'required|date_format:H:i',
-            
-            'departure_airport_name' => 'required|string|max:255',
-            'departure_airport_country' => 'required|string|max:255',
-            'arrival_airport_name' => 'required|string|max:255',
-            'arrival_airport_country' => 'required|string|max:255',
-    
-            'airplane_model' => 'required|string|max:255',
-            'airplane_seats' => 'required|integer|min:1',
+            'departure_airport_id' => 'required|integer|min:1',
+            'arrival_airport_id' => 'required|integer|min:1',
+            'airplane_id' => 'required|integer|min:1',
+            'price' => 'required|integer|min:1'
         ]);
-
-        $this->create_flight($request->all());
-
-        return redirect()->route('admin.flights.index')
-            ->with('success', 'Le vol a bien été créé.');
+        Flight::create($request->all());
+        return $this->redirection('flight', "Le vol a bien été créé.");
     }
 
-    // Ajouter un utilisateur via une requête HTTP
-    public function add_user(Request $request){
+    public function add_user(Request $request) {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'password' => 'required'
+            'name' => 'required|string|min:2',
+            'surname' => 'required|string|min:2',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:4',
+            'role' => 'required|in:0,1'
         ]);
 
-        $this->create_user($request->all());
+        User::create([
+            'name' => $request->input('name'),
+            'surname' => $request->input('surname'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+            'role' => $request->input('role') ? "admin" : "user"
+        ]);
 
-        return redirect()->route('admin.users.index')
-            ->with('success' , 'Le compte a bien été créé');
+        return $this->redirection('user', "Le compte a bien été créé.");
     }
 
-    // Adjouter une réservation via une reqêute HTTP
-    public function add_reservation(Request $request){
+    public function add_reservation(Request $request) {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'flight_id' => 'required|exists:flights,id',
+            'flight_id' => 'required|integer|exists:flights,id',
+            'user_id' => 'required|integer|exists:users,id',
             'baggages' => 'required|integer|min:1',
             'price' => 'required|integer|min:1'
         ]);
-
-        $this->create_reservation($request->all());
-
-        return redirect()->route('admin.reservation.index')
-            ->with('success','La réservation a bien été créé');
+        Reservation::create($request->all());
+        return $this->redirection('reservation', 'Réservation ajoutée.');
     }
 
-    // Ajouter un passagère via une requête HTTP
-    public function add_passager(Request $request){
+    public function add_passenger(Request $request) {
         $request->validate([
             'firstname' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
-            'seat_number' => 'required|integer|min:1',
-            'reservation_id' => 'required|integer|min:1'
+            'seat_number' => 'required|string|max:10',
+            'reservation_id' => 'required|exists:reservations,id',
         ]);
-
-        $this->create_passenger($request->all());
-
-        return redirect()->route('admin.passeger.index')
-            ->with('success','Le passagère a bien été créé');
-    }
-        #####
-    ###############
-        #####
-
-    // Mise à jour dans la table airport d'une ligne avec son id
-    public function update_airport(Request $request, $id) {
-        $request->validate([
-            "name" => "required|string|max:255",
-            "country" => "required|string|max:255",
-        ]);
-
-        $airport = Airport::findOrFail($id);
-        $airport->update($request->all());
-
-        return redirect()->route('admin.airports.index')
-            ->with('success', 'L\'aéroport a bien été mis à jour.');
+        Passenger::create($request->all());
+        return $this->redirection('passenger', 'Le passager a bien été ajouté.');
     }
 
-    // Mise à jour dans la table airplane d'une ligne avec son id
-    public function update_airplane(Request $request, $id) {
-        $request->validate([
-            "model" => "required|string|max:255",
-            "seats" => "required|integer|min:1",
-        ]);
-
-        $airplane = Airplane::findOrFail($id);
-        $airplane->update($request->all());
-
-        return redirect()->route('admin.airplanes.index')
-            ->with('success', 'L\'avion a bien été mis à jour.');
+    public function delete_airport(Request $request) {
+        $request->validate(['airport_id' => 'required|integer|exists:airports,id']);
+        Airport::findOrFail($request->input('airport_id'))->delete();
+        return $this->redirection('airport', "L'aéroport a bien été supprimé.");
     }
 
-    // Mise à jour dans la table flight d'une ligne avec son id
-    public function update_flight(Request $request, $id) {
+    public function delete_airplane(Request $request) {
+        $request->validate(['airplane_id' => 'required|integer|exists:airplanes,id']);
+        Airplane::findOrFail($request->input('airplane_id'))->delete();
+        return $this->redirection('airplane', "L'avion a bien été supprimé.");
+    }
+
+    public function delete_flight(Request $request) {
+        $request->validate(['flight_id' => 'required|integer|exists:flights,id']);
+        Flight::findOrFail($request->input('flight_id'))->delete();
+        return $this->redirection('flight', "Le vol a bien été supprimé.");
+    }
+
+    public function delete_user(Request $request) {
+        $request->validate(['user_id' => 'required|integer|exists:users,id']);
+        User::findOrFail($request->input('user_id'))->delete();
+        return $this->redirection('user', "L'utilisateur a bien été supprimé.");
+    }
+
+    public function delete_reservation(Request $request) {
+        $request->validate(['reservation_id' => 'required|integer|exists:reservations,id']);
+        Reservation::findOrFail($request->input('reservation_id'))->delete();
+        return $this->redirection('reservation', "La réservation a bien été supprimée.");
+    }
+
+    public function delete_passenger(Request $request) {
+        $request->validate(['passenger_id' => 'required|integer|exists:passengers,id']);
+        Passenger::findOrFail($request->input('passenger_id'))->delete();
+        return $this->redirection('passenger', "Le passager a bien été supprimé.");
+    }
+
+    public function update_airport(Request $request) {
         $request->validate([
-            'departure_date' => 'required|date',
-            'arrival_date' => 'required|date',
-            'departure_time' => 'required|date_format:H:i',
-            'arrival_time' => 'required|date_format:H:i',
+            'id' => 'required|integer|exists:airports,id',
+            'name' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255'
         ]);
 
-        $flight = Flight::findOrFail($id);
+        $airport = Airport::find($request->input('id'));
+        $airport->update($request->only('name', 'country'));
+        return $this->redirection('airport', "L'aéroport a été mis à jour.");
+    }
+
+    public function update_airplane(Request $request) {
+        $request->validate([
+            'id' => 'required|integer|exists:airplanes,id',
+            'model' => 'nullable|string|max:255',
+            'seats' => 'nullable|integer|min:1'
+        ]);
+
+        $airplane = Airplane::find($request->input('id'));
+        $airplane->update($request->only('model', 'seats'));
+        return $this->redirection('airplane', "L'avion a été mis à jour.");
+    }
+
+    public function update_flight(Request $request) {
+        $request->validate([
+            'id' => 'required|integer|exists:flights,id',
+            'departure_date' => 'nullable|date',
+            'arrival_date' => 'nullable|date',
+            'departure_time' => 'nullable|date_format:H:i',
+            'arrival_time' => 'nullable|date_format:H:i',
+            'departure_airport_id' => 'nullable|integer|min:1',
+            'arrival_airport_id' => 'nullable|integer|min:1',
+            'airplane_id' => 'nullable|integer|min:1',
+            'price' => 'nullable|integer|min:1'
+        ]);
+
+        $flight = Flight::find($request->input('id'));
         $flight->update($request->all());
-
-        return redirect()->route('admin.flights.index')
-            ->with('success', 'Le vol a bien été mis à jour.');
+        return $this->redirection('flight', "Le vol a été mis à jour.");
     }
 
-    //Mise à jour dans la tables user d'une ligne avec son id
-    public function update_user(Request $request, $id){
+    public function update_reservation(Request $request) {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'password' => 'required'
-            
+            'id' => 'required|integer|exists:reservations,id',
+            'flight_id' => 'nullable|integer|exists:flights,id',
+            'user_id' => 'nullable|integer|exists:users,id',
+            'baggages' => 'nullable|integer|min:1',
+            'price' => 'nullable|integer|min:1'
         ]);
 
-        $user = User::firstOrFail($id);
-        $user->update($request->all());
-            
-        return redirect()->route('admin.users.index')
-            ->with('success' , 'Le compte a bien mis à jour');
-    }
-
-    // Mise à jour dans la table reservation d'une ligne avec son id
-    public function update_reservation(Request $request, $id){
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'flight_id' => 'required|exists:flights,id',
-            'baggages' => 'required|integer|min:1',
-            'price' => 'required|integer|min:1'
-        ]);
-
-        $reservation = Reservation::firstOrFail($id);
+        $reservation = Reservation::find($request->input('id'));
         $reservation->update($request->all());
-
-        return redirect()->route('admin.reservation.index')
-            ->with('success','La réservation a bien été mis à jour');
+        return $this->redirection('reservation', "La réservation a été mise à jour.");
     }
 
-    // Mise à jour dans la table de passenger d'une ligne avec son id
-    public function update_passenger(Request $request, $id){
+    public function update_user(Request $request) {
         $request->validate([
-            'firstname' => 'required|string|max:255',
-            'surname' => 'required|string|max:255',
-            'seat_number' => 'required|integer|min:1',
-            'reservation_id' => 'required|integer|min:1'
+            'id' => 'required|integer|exists:users,id',
+            'name' => 'nullable|string|min:2',
+            'surname' => 'nullable|string|min:2',
+            'email' => 'nullable|email|unique:users,email',
+            'password' => 'nullable|min:4'
         ]);
 
-        $passenger = Passenger::firstOrFail($id);
+        $user = User::find($request->input('id'));
+        if ($request->filled('password')) {
+            $request->merge(['password' => Hash::make($request->password)]);
+        }
+        $user->update($request->only('name', 'surname', 'email', 'password'));
+        return $this->redirection('user', "L'utilisateur a été mis à jour.");
+    }
+
+    public function update_passenger(Request $request) {
+        $request->validate([
+            'id' => 'required|integer|exists:passengers,id',
+            'firstname' => 'nullable|string|max:255',
+            'surname' => 'nullable|string|max:255',
+            'seat_number' => 'nullable|string|max:10',
+            'reservation_id' => 'nullable|exists:reservations,id',
+            'adult' => 'nullable|boolean'
+        ]);
+
+        $passenger = Passenger::find($request->input('id'));
         $passenger->update($request->all());
-
-        return redirect()->route('admin.passenger.index')
-            ->with('success','Le passagère a bien été mis à jour');
+        return $this->redirection('passenger', "Le passager a été mis à jour.");
     }
-
-    // Suppression dans la table airport d'une ligne avec son id
-    public function delete_airport($id) {
-        $airport = Airport::findOrFail($id);
-        $airport->delete();
-
-        return redirect()->route('admin.airports.index')
-            ->with('success', 'L\'aéroport a bien été supprimé.');
-    }
-
-    // Suppression dans la table airplane d'une ligne avec son id
-    public function delete_airplane($id) {
-        $airplane = Airplane::findOrFail($id);
-        $airplane->delete();
-
-        return redirect()->route('admin.airplanes.index')
-            ->with('success', 'L\'avion a bien été supprimé.');
-    }
-
-    // Suppression dans la table flight d'une ligne avec son id
-    public function delete_flight($id) {
-        $flight = Flight::findOrFail($id);
-        $flight->delete();
-
-        return redirect()->route('admin.flights.index')
-            ->with('success', 'Le vol a bien été supprimé.');
-    }
-
-
-
-}    
+}
