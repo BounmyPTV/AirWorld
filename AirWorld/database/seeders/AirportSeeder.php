@@ -18,6 +18,7 @@ class AirportSeeder extends Seeder
         }
 
         $lines = File::lines($path);
+      
         $i = 1;
 
         foreach ($lines as $line) {
@@ -25,7 +26,7 @@ class AirportSeeder extends Seeder
 
             if ($i == 100) break;
             $i++;
-
+          
             if (count($fields) >= 4) {
                 Airport::create([
                     'name' => $fields[1],   

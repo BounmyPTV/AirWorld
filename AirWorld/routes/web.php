@@ -38,10 +38,12 @@ Route::get('/', fn () => redirect()->route('home'));
 Route::get('/home', [SystemController::class, 'home'])->name('home');
 Route::get('/reservation', [SystemController::class, 'reservation'])->name('reservation');
 Route::get('/discover', [SystemController::class, 'discover'])->name('discover');
+
+Route::get('/discover', [SystemController::class, 'discover'])->name('discover');
 Route::get('/admin', [AdminController::class, 'show'])->middleware(['auth', \App\Http\Middleware\CheckAdmin::class])->name('admin');
 
 
-Route::prefix('/admin/add')->group(function(){
+Route::prefix('/admin/add')->middleware(['auth', \App\Http\Middleware\CheckAdmin::class])->group(function(){
     Route::post('/airport' , [AdminController::class, 'add_airport'])->name('Add_Airport');
     Route::post('/airplane' , [AdminController::class, 'add_airplane'])->name('Add_Airplane');
     Route::post('/flight' , [AdminController::class, 'add_flight'])->name('Add_Flight');
@@ -50,7 +52,7 @@ Route::prefix('/admin/add')->group(function(){
     Route::post('/reservation' , [AdminController::class, 'add_reservation'])->name('Add_Reservation');
 });
 
-Route::prefix('/admin/delete')->group(function(){
+Route::prefix('/admin/delete')->middleware(['auth', \App\Http\Middleware\CheckAdmin::class])->group(function(){
     
     Route::delete('/airport' , [AdminController::class, 'delete_airport'])->name('Delete_Airport');
     Route::delete('/airplane' , [AdminController::class, 'delete_airplane'])->name('Delete_Airplane');
@@ -61,7 +63,7 @@ Route::prefix('/admin/delete')->group(function(){
 
 });
 
-Route::prefix('/admin/update')->group(function(){
+Route::prefix('/admin/update')->middleware(['auth', \App\Http\Middleware\CheckAdmin::class])->group(function(){
 
     Route::post('/airport' , [AdminController::class, 'update_airport'])->name('Update_Airport');
     Route::post('/airplane' , [AdminController::class, 'update_airplan'])->name('Update_Airplane');
@@ -71,3 +73,4 @@ Route::prefix('/admin/update')->group(function(){
     Route::post('/reservation' , [AdminController::class, 'update_reservation'])->name('Update_Reservation');
 
 });
+
