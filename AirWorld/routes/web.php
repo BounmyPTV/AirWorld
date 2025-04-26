@@ -38,7 +38,7 @@ Route::get('/', fn () => redirect()->route('home'));
 Route::get('/home', [SystemController::class, 'home'])->name('home');
 Route::get('/reservation', [SystemController::class, 'reservation'])->name('reservation');
 Route::get('/discover', [SystemController::class, 'discover'])->name('discover');
-Route::get('/admin', [AdminController::class, 'show'])->name('admin');
+Route::get('/admin', [AdminController::class, 'show'])->middleware(['auth', \App\Http\Middleware\CheckAdmin::class])->name('admin');
 
 
 Route::prefix('/admin/add')->group(function(){
