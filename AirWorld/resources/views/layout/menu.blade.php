@@ -168,8 +168,14 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
+                            @if (Auth::user()->role == 'admin')
+                            <li><a href="{{ route('admin') }}" class="dropdown-item">
+                                <i class="fas fa-user-shield"></i> Page d'administration</a></li>
+                            <li>
+                            @endif
                             <li><a href="{{ route('account.settings') }}" class="dropdown-item">
-                                    <i class="fas fa-cog"></i> Paramètres</a></li>
+                                    <i class="fas fa-cog"></i> Paramètres</a>
+                            </li>
                             <li>
                                 <form action="{{ route('account.logout') }}" method="POST">
                                     @csrf @method('DELETE')
@@ -211,7 +217,7 @@
                 @foreach ($navbar_menu_section as $index => $section)
                     <div id="{{ $section['id'] }}"
                         class="content-section d-none container-fluid py-3 
-                                                                        d-grid gap-3 responsive-grid-layout align-items-stretch">
+                            d-grid gap-3 responsive-grid-layout align-items-stretch">
 
                         {{-- Côté gauche --}}
                         <div class="list-group border rounded-3 p-1 bg-body-secondary h-100 shadow-sm">

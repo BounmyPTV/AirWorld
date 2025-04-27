@@ -29,7 +29,8 @@ class AirportSeeder extends Seeder
           
             if (count($fields) >= 4) {
                 Airport::create([
-                    'name' => $fields[1],   
+                    'name' => $fields[1],
+                    'city' => $fields[2], 
                     'country' => $fields[3],
                 ]);
             }

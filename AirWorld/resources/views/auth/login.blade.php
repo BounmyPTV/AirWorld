@@ -30,7 +30,8 @@
 @section('autre-content')
     <div class="mt-4 text-center">
         <p class="text-muted mb-1">Tu n'as pas de compte ?</p>
-        <a href="{{ route('register') }}" class="btn btn-link text-body">inscris-toi! <i
-                class="fas fa-chevron-right ms-1"></i></a>
+        <a href="{{ route('register') }}" class="btn btn-link text-body">inscris-toi! 
+            <i class="fas fa-chevron-right ms-1"></i>
+        </a>
     </div>
 @endsection
