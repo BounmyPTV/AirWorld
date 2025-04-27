@@ -168,7 +168,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a href="{{ route('account') }}" class="dropdown-item">
+                            <li><a href="{{ route('account.settings') }}" class="dropdown-item">
                                     <i class="fas fa-cog"></i> Paramètres</a></li>
                             <li>
                                 <form action="{{ route('account.logout') }}" method="POST">

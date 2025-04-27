@@ -69,6 +69,11 @@
 
 @section('content')
 <div class="container p-2">
+    <div class="mt-4">
+        <a href="{{ route('home') }}" class="text-body"><i
+                class="fas fa-chevron-left ms-1"></i>Retournez à l'accueil</a>
+    </div>
+    <hr>
     <h1 class="h3">Page d'administration</h1>
     <div class="row g-2">
 

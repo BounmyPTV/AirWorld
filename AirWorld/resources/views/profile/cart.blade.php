@@ -44,7 +44,7 @@
                                             </div>
                                             <div class="text-end">
                                                 <span class="badge bg-secondary">Réservation #{{ $item }}</span><br>
-                                                <span class="fw-bold fs-6">€{{ $r->flight->price }}</span>
+                                                <span class="fw-bold fs-6">€{{ $r->total_price}}</span>
                                             </div>
                                         </div>
 
@@ -102,11 +102,7 @@
 
                     <div class="d-flex justify-content-between">
                         <strong>Prix total</strong>
-                        <span>{{ number_format(
-        $res->sum(function ($reservation) {
-            return $reservation->flight->price;
-        })
-    )}} &euro;</span>
+                        <span>{{ $total }} &euro;</span>
                     </div>
                     <button class="btn w-100 mt-4" data-bs-toggle="modal" data-bs-target="#paymentConfirmationModal"
                         style="background-color: var(--bs-body-color); color: var(--bs-body-bg);">
@@ -129,8 +125,7 @@
                     </div>
                     <div class="modal-body">
                         <p>Montant total :
-                            <strong>{{ number_format($res->sum(fn($reservation) => $reservation->flight->price)) }}
-                                €</strong>
+                            <strong>{{$total}}&euro;</strong>
                         </p>
 
                         <div class="mb-3">

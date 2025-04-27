@@ -152,5 +152,12 @@
                 </div>
             </div>
         </div>
+        <div class="position-absolute w-100" style="bottom: 15px">
+            <hr>
+            <div class="mt-4">
+                <a href="{{ route('home') }}" class="text-body"><i
+                        class="fas fa-chevron-left ms-1"></i>Retournez à l'accueil</a>
+            </div>
+        </div>
     </div>
 @endsection

@@ -18,11 +18,16 @@ class CartController extends Controller
         ->where('user_id', Auth::id())
         ->where('price', false)
         ->get();
+    
+        $total = 0;
 
-        // return $reservations;
-        return view("profile.cart", ["res" => $reservations]);
+        foreach ($reservations as $reservation) {
+            $reservation->total_price = $reservation->flight->price * $reservation->passengers->count();
+            $total += $reservation->total_price;
+        }
+    
+        return view("profile.cart", ["res" => $reservations, "total" => $total]);
     }
-
     public function delete_cart(Request $request) {
         $reservation = Reservation::find($request->reservation_id);
         $reservation->delete();

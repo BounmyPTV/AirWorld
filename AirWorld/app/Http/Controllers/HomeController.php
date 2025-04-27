@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Flight;
 use Carbon\Carbon;
 
-class SystemController extends Controller
-{
-    public function discover() { return view('discover'); }
-    public function reservation() { return view('reservation'); }
+class HomeController extends Controller
+{        
     public function home() { 
         $flight = Flight::with(['departureAirport', 'arrivalAirport', 'airplane']);
         $today = Carbon::now();

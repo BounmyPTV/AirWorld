@@ -22,4 +22,6 @@ class ReservationController extends Controller
         // return $reservations;
         return view("profile.reservation", ["res" => $reservations]);
     }
+
+    public function reservation() { return view('reservation'); }
 }
