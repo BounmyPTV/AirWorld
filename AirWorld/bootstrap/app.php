@@ -16,13 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
         // $middleware->append(App\Http\Middleware\CheckAdmin::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // Ajout page erreur
-        $exceptions->render(function (Throwable $e) {
-            if ($e instanceof HttpExceptionInterface) {
-                // On mets response->view si on mets que view, le code erreur 
-                // sera 200 et pour la logique du site, c'est pas bon.
-                return response()->view('error', ['code' => $e->getStatusCode()], $e->getStatusCode());
-            }
-        });
+        // // Ajout page erreur
+        // $exceptions->render(function (Throwable $e) {
+        //     if ($e instanceof HttpExceptionInterface) {
+        //         // On mets response->view si on mets que view, le code erreur 
+        //         // sera 200 et pour la logique du site, c'est pas bon.
+        //         return response()->view('error', ['code' => $e->getStatusCode()], $e->getStatusCode());
+        //     }
+        // });
     })->create();
     

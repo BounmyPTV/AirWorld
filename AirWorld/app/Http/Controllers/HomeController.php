@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Flight;
+use App\Models\Airport;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class HomeController extends Controller
