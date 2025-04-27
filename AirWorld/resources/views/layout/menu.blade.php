@@ -7,7 +7,7 @@
     use App\Http\Helpers\ImgHelper;
 
     $home = route('home');
-    $res = route('reservation');
+    $res = route('reservation.homepage');
     $dis = route('discover');
 
     function card_navbar(int $pos, string $city, string $res): array
@@ -59,7 +59,7 @@
 
     $navbar_button = new SectionHelper();
     $navbar_button->add_section('Accueil', 'accContent', request()->routeIs('home'));
-    $navbar_button->add_section('Réserver', 'resContent', request()->routeIs('reservation'));
+    $navbar_button->add_section('Réserver', 'resContent', request()->routeIs('reservation.homepage'));
     $navbar_button->add_section('Découvrir', 'disContent', request()->routeIs('discover'));
 
     $navbar_button_section = $navbar_button->get(); 
@@ -373,7 +373,7 @@
 
             const routes = {
                 accContent: "{{ route('home') }}",
-                resContent: "{{ route('reservation') }}",
+                resContent: "{{ route('reservation.homepage') }}",
                 disContent: "{{ route('discover') }}"
             };
 

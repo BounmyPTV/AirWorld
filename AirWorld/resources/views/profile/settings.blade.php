@@ -38,36 +38,21 @@
                                 <h5 class="card-title mb-0">Informations publiques</h5>
                             </div>
                             <div class="card-body">
-                                <form>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="form-group mb-4">
-                                                <label class="text-muted fw-semibold mb-1" for="inputUsername">
-                                                    <i class="fa fa-user-circle me-2"></i>Nom d'utilisateur
-                                                </label>
-                                                <input type="text" class="form-control" id="inputUsername"
-                                                    value="{{ Auth::user()->name . ' ' . Auth::user()->surname }}" readonly>
-                                            </div>
+                                <div class="form-group mb-4">
+                                    <label class="text-muted fw-semibold mb-1" for="inputUsername">
+                                        <i class="fa fa-user-circle me-2"></i>Nom d'utilisateur
+                                    </label>
+                                    <input type="text" class="form-control" id="inputUsername"
+                                        value="{{ Auth::user()->name . ' ' . Auth::user()->surname }}" readonly>
+                                </div>
 
-                                            <div class="form-group mb-4">
-                                                <label class="text-muted fw-semibold mb-1" for="inputBio">
-                                                    <i class="fa fa-envelope me-2"></i>Email
-                                                </label>
-                                                <input type="email" class="form-control" id="inputBio"
-                                                    value="{{ Auth::user()->email }}" readonly>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="text-center">
-                                                <img alt="Avatar"
-                                                    src="https://bootdey.com/img/Content/avatar/avatar{{ rand(1, 8) }}.png"
-                                                    class="rounded-circle img-responsive mt-2" width="128" height="128">
-                                                <div class="mt-2">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+                                <div class="form-group mb-4">
+                                    <label class="text-muted fw-semibold mb-1" for="inputBio">
+                                        <i class="fa fa-envelope me-2"></i>Email
+                                    </label>
+                                    <input type="email" class="form-control" id="inputBio"
+                                        value="{{ Auth::user()->email }}" readonly>
+                                </div>
                             </div>
                         </div>
                         @if ($errors->any())
@@ -152,12 +137,12 @@
                 </div>
             </div>
         </div>
-        <div class="position-absolute w-100" style="bottom: 15px">
-            <hr>
-            <div class="mt-4">
-                <a href="{{ route('home') }}" class="text-body"><i
-                        class="fas fa-chevron-left ms-1"></i>Retournez à l'accueil</a>
-            </div>
+    </div>
+    <div class="position-absolute start-0 w-100" style="bottom: 15px">
+        <hr class="m-0 w-100">
+        <div class="m-4">
+            <a href="{{ route('home') }}" class="text-body"><i
+                    class="fas fa-chevron-left ms-1"></i>Retournez à l'accueil</a>
         </div>
     </div>
 @endsection

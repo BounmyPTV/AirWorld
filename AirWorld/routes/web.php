@@ -15,7 +15,13 @@ use Illuminate\Support\Facades\Route;
 // Pages publiques
 Route::get('/', fn () => redirect()->route('home'));
 Route::get('/home', [HomeController::class, 'home'])->name('home');
-Route::get('/reservation', [ReservationController::class, 'reservation'])->name('reservation');
+
+// Reservations
+Route::prefix('/reservation')->controller(ReservationController::class)->name('reservation.')->group(function() {
+    Route::get('/', 'reservation')->name('homepage');
+    Route::get('/search', 'search')->name('search');
+});
+// page découvrir
 Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');
 
 // Authentification

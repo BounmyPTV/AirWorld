@@ -4,80 +4,58 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Flight;
+use App\Models\Reservation;
 use App\Models\Airport;
 use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
-    // marche pas encore
     public function reservation(Request $request) {
-        $query = Flight::with([
-            'departureAirport',
-            'arrivalAirport',
-            'airplane',
-        ]);
-
-        $request->validate([
-            'departure_name' => 'nullable|string',
-            'arrival_name' => 'nullable|string',
-            'departure_country' => 'nullable|string',
-            'arrival_country' => 'nullable|string'
-        ]);
-
-        if ($request->hasAny(['departure_name', 'arrival_name',
-            'departure_country', 'arrival_country'])) {
-
-
-                return view('reservation.show');
-        }
-        else {
-            return view('reservation.search');
-        }   
+        $departureId = $request->input('airport_departure_id'); 
+        $arrivalId = $request->input('airport_arrival_id');
+        $departureDate = $request->input('departure_date');
+        $arrivalDate = $request->input('arrival_date');
+    
+        $flights = Flight::query();
+    
+        if ($departureId) $flights->where('departure_airport_id', $departureId);
+        if ($arrivalId) $flights->where('arrival_airport_id', $arrivalId);
+        if ($departureDate) $flights->whereDate('departure_date', $departureDate);
+        if ($arrivalDate) $flights->whereDate('arrival_date', $arrivalDate);
+        
+        $flights = $flights->with(['departureAirport', 'arrivalAirport'])->paginate(20);
+    
+        return view('reservation.search', compact('flights'));
     }
 
-    // public function show($id) {
-    //     $reservations = Flight::with([
-    //         'departureAirport',
-    //         'arrivalAirport',
-    //         'airplane',
-    //     ])
-    //     ->where('id', $id)
-    //     ->get();
+    public function search(Request $request) {
+        $search = $request->input('query');
 
-    //     return view("reservation.show", ["res" => $reservations]);
-    // }
+        if (empty($search)) {
+            return response()->json(Airport::inRandomOrder()->limit(5)->get());
+        }
 
-    // public function reservation(Request $request){ 
-    //     $airports = Airport::all();
+        $results = Airport::where('city', 'like', "%$search%")
+                          ->orWhere('country', 'like', "%$search%")
+                          ->orWhere('name', 'like', "%$search%")
+                          ->limit(5)
+                          ->get();
+    
+        return response()->json($results);
+    }
 
-    //     // Grouper les aéroports par pays
-    //     $groupedAirports = $airports->groupBy('country');
+    public function myreservation() {
+        $reservations = Reservation::with([
+            'flight.departureAirport',
+            'flight.arrivalAirport',
+            'flight.airplane',
+            'passengers'
+        ])
+        ->where('user_id', Auth::id())
+        ->where('price', true)
+        ->get();
 
-    //     // Ensuite, tu peux lister un seul aéroport par pays, par exemple le premier
-    //     $uniqueAirportsByCountry = $groupedAirports->map(function ($airports, $country) {
-    //         // Ici, on prend juste le premier aéroport de chaque pays
-    //         return $airports->first();
-    //     });
-    //     $request->validate([
-    //         "departure_id" => "nullable|integer|exists:flights,id",
-    //     ]);
-        
-    //     return view('reservation', ["airports" => $uniqueAirportsByCountry]); 
-    // }
-
-
-    // public function myreservation() {
-    //     $reservations = Reservation::with([
-    //         'flight.departureAirport',
-    //         'flight.arrivalAirport',
-    //         'flight.airplane',
-    //         'passengers'
-    //     ])
-    //     ->where('user_id', Auth::id())
-    //     ->where('price', true)
-    //     ->get();
-
-    //     // return $reservations;
-    //     return view("profile.reservation", ["res" => $reservations]);
-    // }
+        // return $reservations;
+        return view("profile.reservation", ["res" => $reservations]);
+    }
 }

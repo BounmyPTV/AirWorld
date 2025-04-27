@@ -17,7 +17,7 @@
     <h3 class="fw-normal text-muted mb-3">Explorez le monde avec confort et sécurité</h3>
     <div class="d-flex gap-3 justify-content-center lead fw-normal">
       <a href="#home" class="btn btn-link text-body">En savoir plus <i class="fas fa-chevron-right ms-1"></i></a>
-      <a href="{{ route('reservation') }}" class="btn btn-link text-body">Réserver un vol <i
+      <a href="{{ route('reservation.homepage') }}" class="btn btn-link text-body">Réserver un vol <i
         class="fas fa-chevron-right ms-1"></i></a>
     </div>
     </div>
@@ -63,7 +63,7 @@
       @foreach($list as $f)
       <div class="col">
       <div class="card shadow-sm h-100">
-      <a href="{{ route('reservation') }}/id/{{ $f->id }}" class="card-body rounded-3 bg-body-tertiary">
+      <a href="{{ route('reservation.homepage') }}/id/{{ $f->id }}" class="card-body rounded-3 bg-body-tertiary">
       <h5 class="card-title">{{ $f->departureAirport->name }} → {{ $f->arrivalAirport->name }}</h5>
       <p class="card-text">
       <strong>Départ :</strong> {{ $f->departure_date }} à

@@ -229,7 +229,6 @@
                                             <datalist id="ids_{{ $table }}">
                                                 @foreach ($data as $element)
                                                 @php
-                                                    // Accès dynamique aux données de la table avec 's' ajouté
                                                     $data = ${$table . 's'} ?? [];
                                                 @endphp
                                                     <option value="{{ $element->id }}">
