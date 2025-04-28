@@ -30,7 +30,22 @@ Avant d'exécuter le projet, vous devez avoir installé les éléments suivants 
     ```bash
     composer install
     ```
-3. **Exécuter les migrations** :
+
+3. **configurer votre .env** :
+
+    Copiez le fichier .env.example vers .env :
+    ```bash
+    cp .env.example .env
+    ```
+    Si vous voulez configurer les infos comme la base de donnée, vous pouvez editer .env .
+
+4. **Générer la clé de l’application** :
+    Laravel nécessite une clé d’application unique pour fonctionner. Vous pouvez générer cette clé avec la commande suivante :
+    ```
+    php artisan key:generate
+    ```
+
+5. **Exécuter les migrations** :
 
     Vous pouvez les exécuter avec la commande suivante pour ajouter les seeders :
 
@@ -45,7 +60,7 @@ Avant d'exécuter le projet, vous devez avoir installé les éléments suivants 
     ```
 
 ## Lancement
-pour lancer l'executable, vous pouvez simplement faire 
+pour lancer l'executable, vous pouvez simplement faire : 
 ```bash
     php artisan serve
 ```
