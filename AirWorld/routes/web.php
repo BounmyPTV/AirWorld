@@ -20,6 +20,7 @@ Route::prefix('/reservation')->controller(ReservationController::class)->name('r
     Route::get('/', 'reservation')->name('homepage');
     Route::get('/search', 'search')->name('search');
     Route::get('/{id}', 'show_reservation')->middleware('auth')->name('show');
+    Route::post('/{id}', 'add_reservation')->middleware('auth')->name('affected');
 });
 // page découvrir
 Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');

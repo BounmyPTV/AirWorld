@@ -17,7 +17,7 @@
                         <span class="text-muted">{{ count($res) }} révervations</span>
                     </div>
 
-                    <div style="height:70vh; overflow-y: auto">
+                    <div style="height:80vh; overflow-y: auto">
                         @foreach($res as $index => $r)
                             <div class="card mb-4 shadow-sm" id="reservation {{$item}}">
                                 <div class="card-body">
@@ -71,15 +71,13 @@
                             </div>
                         @endforeach
                     </div>
-                    <hr>
-                    <div class="mt-4">
-                        <a href="{{ route('home') }}" class="text-body"><i class="fas fa-chevron-left ms-1"></i>Retournez à
-                            l'accueil</a>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
+    <div class="position-fixed bottom-0 start-0 mb-3 me-3 p-2" style="width: 50px; height: 50px; z-index: 1080;">
+        <a href="{{ route('home') }}" class="btn btn-primary w-100 h-100 d-flex justify-content-center align-items-center shadow p-0">
+            <i class="fas fa-chevron-left"></i>
+        </a>
     </div>
 @endsection

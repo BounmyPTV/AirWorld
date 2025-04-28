@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Flight;
 use App\Models\Reservation;
 use App\Models\Airport;
+use App\Models\Passenger;
 use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
@@ -79,13 +80,45 @@ class ReservationController extends Controller
             'arrivalAirport',
             'airplane',
         ])
-        ->find($id)
+        ->where('id', $id)
         ->first();
 
-        if (!$flight) {
-            return redirect()->route('reservation.homepage')->with('error', 'Vol non trouvé.');
-        }
+        if (!Flight::find($id)) {
+            return redirect()->route('reservation.homepage')
+                ->withErrors(['not found' =>'impossible de trouver la reservation du vol']);
+            }
 
         return view("reservation.show", compact('flight'));
+    }
+
+    public function add_reservation(Request $request, $flight_id)
+    {
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'baggages' => 'required|integer|min:0',
+            'passengers' => 'required|array|min:1',
+            'passengers.*.first_name' => 'required|string|max:255',
+            'passengers.*.last_name' => 'required|string|max:255',
+        ]);
+
+        $flight = Flight::findOrFail($flight_id);
+
+        $reservation = Reservation::create([
+            'flight_id' => $flight->id,
+            'user_id' => $request->user_id,
+            'baggages' => $request->baggages,
+            'paid' => false,
+        ]);
+
+        foreach ($request->passengers as $index => $passengerData) {
+            Passenger::create([
+                'firstname' => $passengerData['first_name'],
+                'surname' => $passengerData['last_name'],
+                'seat_number' => rand(1, max(1, floor($flight->airplane->seats / 2))) . (rand(0, 1) ? 'A' : 'B'),
+                'reservation_id' => $reservation->id,
+            ]);
+        }
+
+        return redirect()->route('reservation.homepage')->with('success', 'Réservation ajouté aux panier');
     }
 }

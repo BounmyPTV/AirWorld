@@ -7,7 +7,7 @@
 @endphp
 
 @section('content')
-    <div class="container-fluid h-100 p-4">
+    <div class="container-fluid h-100 w-100 p-md-4 p-2">
         <div class="rounded-1 card h-100 shadow bg-body-secondary">
             <div class="row h-100 g-0">
                 <!-- Partie gauche scrollspy -->
@@ -19,7 +19,7 @@
                             <span class="text-muted">{{ count($res) }} révervations</span>
                         </div>
 
-                        <div style="height:70vh; overflow-y: auto">
+                        <div style="height:80vh; overflow-y: auto">
                             @foreach($res as $index => $r)
                                 <div class="card mb-4 shadow-sm" id="reservation {{$item}}">
                                     <div class="card-body">
@@ -89,22 +89,17 @@
                                 </div>
                             @endforeach
                         </div>
-                        <hr>
-                        <div class="mt-4">
-                            <a href="{{ route('home') }}" class="text-body"><i
-                                    class="fas fa-chevron-left ms-1"></i>Retournez à l'accueil</a>
-                        </div>
                     </div>
                 </div>
 
                 <!-- Partie droite nav + summary -->
-                <div class="col-md-4 bg-body p-4 d-flex flex-column justify-content-between rounded-2">
+                <div class="col-md-4 bg-body p-3 d-flex flex-column justify-content-between rounded-2">
 
                     <div class="d-flex justify-content-between">
                         <strong>Prix total</strong>
                         <span>{{ $total }} &euro;</span>
                     </div>
-                    <button class="btn w-100 mt-4" data-bs-toggle="modal" data-bs-target="#paymentConfirmationModal"
+                    <button class="btn w-75 mx-auto mt-4" data-bs-toggle="modal" data-bs-target="#paymentConfirmationModal"
                         style="background-color: var(--bs-body-color); color: var(--bs-body-bg);">
                         Passer au paiement
                     </button>
@@ -168,5 +163,10 @@
                 </form>
             </div>
         </div>
+    </div>
+    <div class="position-fixed bottom-0 start-0 mb-3 me-3 p-2" style="width: 50px; height: 50px; z-index: 1080;">
+        <a href="{{ route('home') }}" class="btn btn-primary w-100 h-100 d-flex justify-content-center align-items-center shadow p-0">
+            <i class="fas fa-chevron-left"></i>
+        </a>
     </div>
 @endsection

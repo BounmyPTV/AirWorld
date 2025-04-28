@@ -4,6 +4,21 @@
 
 @section('content-menu')
     <div class="container pt-5 pb-5">
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Succès :</strong> {{ session('success') }}
+            </div>
+        @endif
+        
+        @if ($errors->any())
+            <script>
+                let errorMessages = "";
+                @foreach ($errors->all() as $error)
+                    errorMessages += " - {{ $error }}\n";
+                @endforeach
+                alert("Erreur : \n" + errorMessages);
+            </script>
+        @endif
         <form action="{{ route('reservation.homepage') }}" class="form p-3" method="GET" id="book1">
             <div class="row bg-body">
                 <div class="col-xl-4 mb-3">
