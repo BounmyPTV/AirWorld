@@ -90,9 +90,20 @@ class AdminController extends Controller {
             'flight_id' => 'required|integer|exists:flights,id',
             'user_id' => 'required|integer|exists:users,id',
             'baggages' => 'required|integer|min:1',
-            'price' => 'required|integer|min:1'
+            'paid' => 'required|boolean'
         ]);
-        Reservation::create($request->all());
+
+        $user = User::find($request->user_id);
+        $res = Reservation::create($request->all());
+        $flight = Flight::find($request->input('flight_id'));
+
+        $this->add_passenger(Request::create('', 'POST', [
+            'firstname' => $user->name,
+            'surname' => $user->surname,
+            'seat_number' => rand(1, $flight->airplane->seats / 2) . (rand(0, 1)) ? "A" : "B",
+            'reservation_id' => $res->id,
+        ]));
+
         return $this->redirection('reservation', 'Réservation ajoutée.');
     }
 
@@ -191,7 +202,7 @@ class AdminController extends Controller {
             'flight_id' => 'nullable|integer|exists:flights,id',
             'user_id' => 'nullable|integer|exists:users,id',
             'baggages' => 'nullable|integer|min:1',
-            'price' => 'nullable|integer|min:1'
+            'paid' => 'nullable|boolean'
         ]);
 
         $reservation = Reservation::find($request->input('id'));

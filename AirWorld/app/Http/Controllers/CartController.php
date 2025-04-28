@@ -9,24 +9,25 @@ use Illuminate\Support\Facades\Auth;
 class CartController extends Controller
 {
     public function cart() {
-        $reservations = Reservation::with([
+        $res = Reservation::with([
             'flight.departureAirport',
             'flight.arrivalAirport',
             'flight.airplane',
             'passengers'
         ])
         ->where('user_id', Auth::id())
-        ->where('price', false)
+        ->where('paid', false)
         ->get();
     
         $total = 0;
+        
 
-        foreach ($reservations as $reservation) {
+        foreach ($res as $reservation) {
             $reservation->total_price = $reservation->flight->price * $reservation->passengers->count();
             $total += $reservation->total_price;
         }
     
-        return view("profile.cart", ["res" => $reservations, "total" => $total]);
+        return view("profile.cart", compact('res', 'total'));
     }
     public function delete_cart(Request $request) {
         $reservation = Reservation::find($request->reservation_id);
@@ -38,8 +39,8 @@ class CartController extends Controller
         $user = Auth::user();
 
         Reservation::where('user_id', $user->id)
-            ->where('price', false)
-            ->update(['price' => true]);
+            ->where('paid', false)
+            ->update(['paid' => true]);
 
         return redirect()->route('account.myreservation')->with('success', 'Paiement effectué avec succès !');
     }

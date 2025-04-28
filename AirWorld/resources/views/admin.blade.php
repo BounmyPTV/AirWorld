@@ -186,7 +186,7 @@
                                             elseif (str_contains($item, 'email')) $type = 'email';
                                             elseif (str_contains($item, 'password')) $type = 'password';
                                             elseif (str_contains($item, 'price') || str_contains($item, 'seat')) $type = 'number';
-                                            elseif ($item == 'role') $type = 'radio';
+                                            elseif ($item == 'role' || $item == 'paid' || $item == 'adult') $type = 'radio';
                                         @endphp
                                         
                                         <div class="form-group mb-2">
@@ -201,7 +201,7 @@
                                                         </option>
                                                     @endforeach
                                                 </datalist>
-                                                @elseif ($type == 'radio' && $item == 'role') 
+                                                @elseif ($type == 'radio') 
                                                 <div>
                                                     <label class="me-3">
                                                         <input type="radio" name="{{ $item }}" value="1" {{ old($item) == 1 ? 'checked' : '' }}> True

@@ -23,7 +23,7 @@ class FlightSeeder extends Seeder
         for ($i = 0; $i < 100; $i++) {
             // Dates de départ/arrivée (même jour ou jour suivant)
             $departureDate = now()->addDays(rand(1, 30))->format('Y-m-d');
-            $arrivalDate = $departureDate;  // Ensure arrival is the same day for simplicity (could adjust if needed)
+            $arrivalDate = $departureDate;
     
             // Heure aléatoire de départ et arrivée (ex: départ à 08h, arrivée à 10h)
             $departureHour = rand(5, 20); // entre 5h et 20h

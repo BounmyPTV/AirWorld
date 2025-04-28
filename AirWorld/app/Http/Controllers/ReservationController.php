@@ -23,8 +23,22 @@ class ReservationController extends Controller
         if ($departureDate) $flights->whereDate('departure_date', $departureDate);
         if ($arrivalDate) $flights->whereDate('arrival_date', $arrivalDate);
         
-        $flights = $flights->with(['departureAirport', 'arrivalAirport'])->paginate(20);
-    
+        $flights = $flights->with(['departureAirport', 'arrivalAirport', 'airplane']);
+        if (empty($request->all())) $flights = $flights->inRandomOrder();
+        $flights = $flights->paginate(20);
+
+        $res = Reservation::with(
+            ['passengers']
+        );
+
+        foreach($flights as $flight) {
+            $totalPassengers = Reservation::where('flight_id', $flight->id)
+                ->withCount('passengers') 
+                ->get()
+                ->sum('passengers_count');
+            $flight->total_place = $flight->airplane->seats - $totalPassengers;
+        }
+
         return view('reservation.search', compact('flights'));
     }
 
@@ -45,17 +59,33 @@ class ReservationController extends Controller
     }
 
     public function myreservation() {
-        $reservations = Reservation::with([
+        $res = Reservation::with([
             'flight.departureAirport',
             'flight.arrivalAirport',
             'flight.airplane',
             'passengers'
         ])
         ->where('user_id', Auth::id())
-        ->where('price', true)
+        ->where('paid', true)
         ->get();
 
         // return $reservations;
-        return view("profile.reservation", ["res" => $reservations]);
+        return view("profile.reservation", compact('res'));
+    }
+
+    public function show_reservation($id) {
+        $flight = Flight::with([
+            'departureAirport',
+            'arrivalAirport',
+            'airplane',
+        ])
+        ->find($id)
+        ->first();
+
+        if (!$flight) {
+            return redirect()->route('reservation.homepage')->with('error', 'Vol non trouvé.');
+        }
+
+        return view("reservation.show", compact('flight'));
     }
 }

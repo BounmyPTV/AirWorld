@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('flight_id')->constrained()->onDelete('cascade');
             $table->decimal('baggages');
-            $table->boolean('price')->default(false);
+            $table->boolean('paid')->default(false);
             $table->timestamps();
         });
     }

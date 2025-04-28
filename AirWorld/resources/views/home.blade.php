@@ -63,7 +63,7 @@
       @foreach($list as $f)
       <div class="col">
       <div class="card shadow-sm h-100">
-      <a href="{{ route('reservation.homepage') }}/id/{{ $f->id }}" class="card-body rounded-3 bg-body-tertiary">
+      <a href="{{ route('reservation.show', ['id' => $f->id]) }}" class="card-body rounded-3 bg-body-tertiary">
       <h5 class="card-title">{{ $f->departureAirport->name }} → {{ $f->arrivalAirport->name }}</h5>
       <p class="card-text">
       <strong>Départ :</strong> {{ $f->departure_date }} à

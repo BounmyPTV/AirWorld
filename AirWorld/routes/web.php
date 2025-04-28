@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\SystemController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
@@ -9,7 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DiscoverController;
 
 use \App\Http\Middleware\CheckAdmin;
-
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 
 // Pages publiques
@@ -20,6 +19,7 @@ Route::get('/home', [HomeController::class, 'home'])->name('home');
 Route::prefix('/reservation')->controller(ReservationController::class)->name('reservation.')->group(function() {
     Route::get('/', 'reservation')->name('homepage');
     Route::get('/search', 'search')->name('search');
+    Route::get('/{id}', 'show_reservation')->middleware('auth')->name('show');
 });
 // page découvrir
 Route::get('/discover', [DiscoverController::class, 'discover'])->name('discover');

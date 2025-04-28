@@ -8,7 +8,7 @@
     <title>@yield('title', 'AirWorld')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ 'favicon.ico' }}" type="image/x-icon">
 </head>
 
 <body data-bs-theme="">

@@ -245,7 +245,7 @@
                                         <a href="{{ $item['right'] }}">
                                             @if ($item['id'])
                                                 <div class="carousel-image-wrapper h-100">
-                                                    <img src="{{ asset($item['id']) }}" loading="lazy"
+                                                    <img src="{{ $item['id'] }}" loading="lazy"
                                                         class="img-fluid w-100 h-100 object-fit-cover" alt="Image">
                                                 </div>
                                             @endif
