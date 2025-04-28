@@ -53,7 +53,7 @@ class ReservationController extends Controller
         $results = Airport::where('city', 'like', "%$search%")
                           ->orWhere('country', 'like', "%$search%")
                           ->orWhere('name', 'like', "%$search%")
-                          ->limit(7)
+                          ->limit(5)
                           ->get();
     
         return response()->json($results);
