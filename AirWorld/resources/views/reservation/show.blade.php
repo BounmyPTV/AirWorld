@@ -92,13 +92,24 @@
                 <div class="mb-3 p-2 border rounded bg-body-tertiary">
                     <h5>Passager ${i}</h5>
                     <div class="row">
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="first_name_${i}" class="form-label">Prénom</label>
                             <input type="text" class="form-control" name="passengers[${i}][first_name]" id="first_name_${i}" ${array[0] ? 'value="' + array[0] + '"' : ''} required>
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label for="last_name_${i}" class="form-label">Nom</label>
                             <input type="text" class="form-control" name="passengers[${i}][last_name]" id="last_name_${i}" ${array[1] ? 'value="' + array[1] + '"' : ''} required>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="adult_${i}" class="form-label">Catégorie</label>
+                            <div>
+                                <input type="radio" class="form-check-input" name="passengers[${i}][category]" id="adult_${i}" value="1" required>
+                                <label for="adult_${i}" class="form-check-label">Adulte</label>
+                            </div>
+                            <div>
+                                <input type="radio" class="form-check-input" name="passengers[${i}][category]" id="child_${i}" value="0" required>
+                                <label for="child_${i}" class="form-check-label">Enfant</label>
+                            </div>
                         </div>
                     </div>
                 </div>`;

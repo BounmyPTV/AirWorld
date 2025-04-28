@@ -99,6 +99,7 @@ class ReservationController extends Controller
             'passengers' => 'required|array|min:1',
             'passengers.*.first_name' => 'required|string|max:255',
             'passengers.*.last_name' => 'required|string|max:255',
+            'passengers.*.category' => 'required|in:0,1',
         ]);
 
         $flight = Flight::findOrFail($flight_id);
@@ -114,6 +115,7 @@ class ReservationController extends Controller
             Passenger::create([
                 'firstname' => $passengerData['first_name'],
                 'surname' => $passengerData['last_name'],
+                'adult' => $passengerData['category'],
                 'seat_number' => rand(1, max(1, floor($flight->airplane->seats / 2))) . (rand(0, 1) ? 'A' : 'B'),
                 'reservation_id' => $reservation->id,
             ]);
