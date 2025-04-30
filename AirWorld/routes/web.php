@@ -80,12 +80,12 @@ Route::middleware('auth')->group(function () {
         });
         // Toute les routes post pour add
         Route::prefix('/delete')->name('Delete_')->group(function() {
-            Route::post('/airport' , 'delete_airport')->name('Airport');
-            Route::post('/airplane' , 'delete_airplane')->name('Airplane');
-            Route::post('/flight' , 'delete_flight')->name('Flight');
-            Route::post('/passenger' , 'delete_passenger')->name('Passenger');
-            Route::post('/user' , 'delete_user')->name('User');
-            Route::post('/reservation' , 'delete_reservation')->name('Reservation');
+            Route::delete('/airport' , 'delete_airport')->name('Airport');
+            Route::delete('/airplane' , 'delete_airplane')->name('Airplane');
+            Route::delete('/flight' , 'delete_flight')->name('Flight');
+            Route::delete('/passenger' , 'delete_passenger')->name('Passenger');
+            Route::delete('/user' , 'delete_user')->name('User');
+            Route::delete('/reservation' , 'delete_reservation')->name('Reservation');
         });
     });
 });
