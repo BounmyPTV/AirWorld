@@ -20,8 +20,8 @@ Avant d'exécuter le projet, vous devez avoir installé les éléments suivants 
     depuis le dépôt Git :
 
    ```bash
-   git clone https://lien_vers_le_dépôt.git
-   cd nom_du_dossier
+   git clone https://github.com/BounmyPTV/AirWorld.git
+   cd AirWorld
    ```
 2.	**Installer les dépendances avec Composer** :
 
